@@ -1,0 +1,21 @@
+{
+	"name": "dface/container",
+	"description": "Simple IoC container for php",
+	"keywords": ["Container", "Dependency injection", "Inversion of control"],
+	"type": "library",
+	"license": "MIT",
+	"authors": [{
+		"name": "Denis Ponomarev",
+		"email": "ponomarev@gmail.com"
+	}
+	],
+	"require": {
+		"php": ">=5.6.0"
+	},
+	"require-dev": {
+		"phpunit/phpunit": "3.7.*"
+	},
+	"autoload": {
+		"psr-0": {"dface": "src/"}
+	}
+}
