@@ -33,7 +33,7 @@ class OptionsContainer extends BaseContainer {
 			if($this->parent !== null){
 				return $this->parent->getItem($name);
 			}else{
-				throw new \InvalidArgumentException("Item '$name' not found");
+				throw new ContainerException("Item '$name' not found");
 			}
 		}
 	}

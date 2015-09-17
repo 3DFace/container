@@ -27,7 +27,7 @@ class ContainerLink extends BaseContainer {
 		if($owner = $this->hasItem($name)){
 			return $owner->getItem($name);
 		} else{
-			throw new \InvalidArgumentException("Item '$name' not found");
+			throw new ContainerException("Item '$name' not found");
 		}
 	}
 }
