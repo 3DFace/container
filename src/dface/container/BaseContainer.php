@@ -3,7 +3,9 @@
 
 namespace dface\container;
 
-abstract class BaseContainer implements Container, \ArrayAccess {
+use Interop\Container\ContainerInterface;
+
+abstract class BaseContainer implements Container, \ArrayAccess, ContainerInterface {
 
 	public function offsetExists($offset){
 		return $this->hasItem($offset);
@@ -19,6 +21,18 @@ abstract class BaseContainer implements Container, \ArrayAccess {
 
 	public function offsetUnset($offset){
 		throw new \Exception("Unsupported container access");
+	}
+
+	public function get($id){
+		return $this->getItem($id);
+	}
+
+	public function has($id){
+		return (bool)$this->hasItem($id);
+	}
+
+	function __invoke($id){
+		return $this->getItem($id);
 	}
 
 }

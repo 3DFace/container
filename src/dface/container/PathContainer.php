@@ -3,40 +3,42 @@
 
 namespace dface\container;
 
+use Interop\Container\ContainerInterface;
+
 class PathContainer extends BaseContainer {
 
-	/** @var Container */
+	/** @var ContainerInterface */
 	protected $container;
 	/** @var PathResolver */
 	protected $path_resolver;
 
-	function __construct(Container $container, PathResolver $path_resolver = null){
+	function __construct(ContainerInterface $container, PathResolver $path_resolver = null){
 		$this->container = $container;
 		$this->path_resolver = $path_resolver ?: new DefaultPathResolver();
 	}
 
 	function hasItem($name){
-		/** @var $container Container */
+		/** @var $container ContainerInterface */
 		try{
 			list($container, $resolved_name) = $this->splitContainerAndItemName($name);
 		}catch(ContainerException $e){
 			return false;
 		}
-		return $container->hasItem($resolved_name) ? $this : false;
+		return $container->has($resolved_name);
 	}
 
 	function getItem($name){
-		/** @var $container Container */
+		/** @var $container ContainerInterface */
 		list($container, $resolved_name) = $this->splitContainerAndItemName($name);
-		return $container->getItem($resolved_name);
+		return $container->get($resolved_name);
 	}
 
 	protected function splitContainerAndItemName($full_name){
 		list($container_name, $item_name) = $this->path_resolver->resolve($full_name);
 		if($container_name !== null){
 			$container = $this->getItem($container_name);
-			if(!$container instanceof Container){
-				throw new ContainerException("Container '$container_name' in path '$full_name' must be an instance of ".Container::class);
+			if(!$container instanceof ContainerInterface){
+				throw new ContainerException("Container '$container_name' in path '$full_name' must be an instance of ".ContainerInterface::class);
 			}
 			return [$container, $item_name];
 		}else{

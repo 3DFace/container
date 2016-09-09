@@ -3,26 +3,28 @@
 
 namespace dface\container;
 
+use Interop\Container\ContainerInterface;
+
 class OptionsContainer extends BaseContainer {
 
 	protected $options;
-	/** @var Container */
+	/** @var ContainerInterface */
 	protected $parent;
 
 	/**
 	 * @param string|array $options
-	 * @param Container|null $parent
+	 * @param ContainerInterface|null $parent
 	 */
-	function __construct($options, $parent = null){
+	function __construct($options, ContainerInterface $parent = null){
 		$this->options =  is_array($options) ? $options : $this->parseOpts($options);
 		$this->parent = $parent;
 	}
 
 	function hasItem($name){
 		if(array_key_exists($name, $this->options)){
-			return $this;
+			return true;
 		}else{
-			return $this->parent ? $this->parent->hasItem($name) : false;
+			return $this->parent !== null && $this->parent->has($name);
 		}
 	}
 
@@ -31,9 +33,9 @@ class OptionsContainer extends BaseContainer {
 			return $this->options[$name];
 		}else{
 			if($this->parent !== null){
-				return $this->parent->getItem($name);
+				return $this->parent->get($name);
 			}else{
-				throw new ContainerException("Item '$name' not found");
+				throw new NotFoundException("Item '$name' not found");
 			}
 		}
 	}

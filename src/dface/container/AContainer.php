@@ -2,12 +2,14 @@
 
 namespace dface\container;
 
-class AContainer extends BaseContainer implements Container {
+use Interop\Container\ContainerInterface;
+
+class AContainer extends BaseContainer {
 
 	/** @var Container */
 	protected $container;
 
-	function __construct(array $definitions = [], Container $parent = null){
+	function __construct(array $definitions = [], ContainerInterface $parent = null){
 		$lookup = $parent ? new ContainerLink($this, $parent) : $this;
 		$factories = new FactoryContainer($definitions, $lookup);
 		$singletons = new SingletonContainer($factories);

@@ -30,7 +30,7 @@ class FactoryContainerTest extends \PHPUnit_Framework_TestCase {
 				return 1;
 			},
 		]);
-		$this->assertEquals($c, $c->hasItem('a'));
+		$this->assertTrue($c->hasItem('a'));
 		$this->assertFalse($c->hasItem('b'));
 	}
 
@@ -41,7 +41,7 @@ class FactoryContainerTest extends \PHPUnit_Framework_TestCase {
 			},
 		]);
 		$this->assertEquals(1, $c->getItem('a'));
-		$this->setExpectedException(ContainerException::class);
+		$this->setExpectedException(NotFoundException::class);
 		$c->getItem('b');
 	}
 

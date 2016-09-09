@@ -6,7 +6,7 @@ interface Container {
 
 	/**
 	 * @param $name string
-	 * @return Container | null
+	 * @return bool
 	 */
 	function hasItem($name);
 

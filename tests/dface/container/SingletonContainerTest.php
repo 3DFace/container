@@ -24,7 +24,7 @@ class SingletonContainerTest extends \PHPUnit_Framework_TestCase {
 			},
 		]);
 		$c = new SingletonContainer($f);
-		$this->assertEquals($c, $c->hasItem('a'));
+		$this->assertTrue($c->hasItem('a'));
 		$this->assertFalse($c->hasItem('b'));
 	}
 
@@ -36,7 +36,7 @@ class SingletonContainerTest extends \PHPUnit_Framework_TestCase {
 		]);
 		$c = new SingletonContainer($f);
 		$this->assertEquals(1, $c->getItem('a'));
-		$this->setExpectedException(ContainerException::class);
+		$this->setExpectedException(NotFoundException::class);
 		$c->getItem('b');
 	}
 

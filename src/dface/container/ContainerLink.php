@@ -3,31 +3,29 @@
 
 namespace dface\container;
 
+use Interop\Container\ContainerInterface;
+
 class ContainerLink extends BaseContainer {
 
-	/** @var Container */
+	/** @var ContainerInterface */
 	protected $primary;
-	/** @var Container */
+	/** @var ContainerInterface */
 	protected $secondary;
 
-	function __construct(Container $primary, Container $secondary){
+	function __construct(ContainerInterface $primary, ContainerInterface $secondary){
 		$this->primary = $primary;
 		$this->secondary = $secondary;
 	}
 
 	function hasItem($name){
-		if($owner = $this->primary->hasItem($name)){
-			return $owner;
-		}else{
-			return $this->secondary->hasItem($name);
-		}
+		return $this->primary->has($name) || $this->secondary->has($name);
 	}
 
 	function getItem($name){
-		if($owner = $this->hasItem($name)){
-			return $owner->getItem($name);
-		} else{
-			throw new ContainerException("Item '$name' not found");
+		if($this->primary->has($name)){
+			return $this->primary->get($name);
+		}else{
+			return $this->secondary->get($name);
 		}
 	}
 }

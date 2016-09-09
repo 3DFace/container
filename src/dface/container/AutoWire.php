@@ -3,9 +3,11 @@
 
 namespace dface\container;
 
+use Interop\Container\ContainerInterface;
+
 class AutoWire {
 	
-	static function construct(Container $container, $class, $explicit_arguments = []){
+	static function construct(ContainerInterface $container, $class, $explicit_arguments = []){
 		$reflection_class = new \ReflectionClass($class);
 		$constructor = $reflection_class->getConstructor();
 		$args = [];
@@ -22,10 +24,10 @@ class AutoWire {
 				$args[$i] = $explicit_arguments[$parameter_class_name];
 			}elseif(array_key_exists($parameter_name, $explicit_arguments)){
 				$args[$i] = $explicit_arguments[$parameter_name];
-			}elseif($parameter_class_name && ($owner = $container->hasItem($parameter_class_name))){
-				$args[$i] = $owner->getItem($parameter_class_name);
-			}elseif($owner = $container->hasItem($parameter_name)){
-				$args[$i] = $owner->getItem($parameter_name);
+			}elseif($parameter_class_name && $container->has($parameter_class_name)){
+				$args[$i] = $container->get($parameter_class_name);
+			}elseif($container->has($parameter_name)){
+				$args[$i] = $container->get($parameter_name);
 			}elseif($parameter->isDefaultValueAvailable()){
 				$args[$i] = $parameter->getDefaultValue();
 			}else{
@@ -35,13 +37,13 @@ class AutoWire {
 		return $reflection_class->newInstanceArgs($args);
 	}
 
-	static function setProperties(Container $container, $object, $exclude = []){
+	static function setProperties(ContainerInterface $container, $object, $exclude = []){
 		foreach(get_class_methods($object) as $name){
 			if(strlen($name) > 3 && substr($name, 0, 3) === 'set'){
 				$property = strtolower($name[3]).substr($name, 4);
 				if(!in_array($property, $exclude)){
-					if($owner = $container->hasItem($property)){
-						$item = $owner->getItem($property);
+					if($container->has($property)){
+						$item = $container->get($property);
 						$object->$name($item);
 					}
 				}

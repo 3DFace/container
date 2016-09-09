@@ -12,7 +12,7 @@ class PathContainerTest extends \PHPUnit_Framework_TestCase {
 			},
 		]);
 		$c = new PathContainer($f);
-		$this->assertEquals($c, $c->hasItem('a'));
+		$this->assertTrue($c->hasItem('a'));
 		$this->assertFalse($c->hasItem('a/a'));
 		$this->assertFalse($c->hasItem('b'));
 		$this->assertEquals(1, $c->getItem('a'));
@@ -29,11 +29,12 @@ class PathContainerTest extends \PHPUnit_Framework_TestCase {
 			},
 		]);
 		$c = new PathContainer($f);
-		$this->assertEquals($c, $c->hasItem('a'));
-		$this->assertEquals($c, $c->hasItem('a/a'));
-		$this->assertInstanceOf(FactoryContainer::class, $c->getItem('a')->hasItem('a'));
+		$this->assertTrue($c->hasItem('a'));
+		$this->assertTrue($c->hasItem('a/a'));
+		$this->assertTrue($c->getItem('a')->hasItem('a'));
 		$this->assertFalse($c->hasItem('a/b'));
 		$this->assertEquals(1, $c->getItem('a/a'));
+		$this->assertEquals(1, $c->getItem('a')->getItem('a'));
 	}
 
 }

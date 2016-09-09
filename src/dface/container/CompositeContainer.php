@@ -3,30 +3,29 @@
 
 namespace dface\container;
 
+use Interop\Container\ContainerInterface;
 
-class CompositeContainer extends BaseContainer implements Container {
+class CompositeContainer extends BaseContainer {
 
-	/** @var Container[] */
+	/** @var ContainerInterface[] */
 	protected $links = [];
-	/** @var Container */
+	/** @var ContainerInterface */
 	protected $parent;
-	/** @var bool */
-	private $is_recursive = false;
 
-	function __construct($links = [], $parent = null){
+	function __construct($links = [], ContainerInterface $parent = null){
 		$this->addContainers($links);
 		$this->parent = $parent;
 	}
 
 	/**
-	 * @param Container $container
+	 * @param ContainerInterface $container
 	 */
 	function addContainer($container){
 		$this->links[] = $container;
 	}
 
 	/**
-	 * @param Container[] $containers
+	 * @param ContainerInterface[] $containers
 	 */
 	function addContainers($containers){
 		foreach($containers as $container){
@@ -36,37 +35,39 @@ class CompositeContainer extends BaseContainer implements Container {
 
 	function hasItem($name){
 		if($owner = $this->hasLinkedItem($name)){
-			return $owner;
+			return true;
 		}else{
-			return $this->parent ? $this->parent->hasItem($name) : false;
+			return $this->parent !== null && $this->parent->has($name);
 		}
 	}
 
 	function getItem($name){
-		if($owner = $this->hasItem($name)){
-			return $owner->getItem($name);
+		if($owner = $this->hasLinkedItem($name)){
+			return $owner->get($name);
 		}else{
-			throw new ContainerException("Item '$name' not found");
+			return $this->parent->get($name);
 		}
 	}
 
+	/**
+	 * @param $name
+	 * @return ContainerInterface|null
+	 */
 	protected function hasLinkedItem($name){
-		if(!$this->is_recursive){
-			$this->is_recursive = true;
+		static $is_recursive = false;
+		if(!$is_recursive){
+			$is_recursive = true;
 			try{
 				foreach($this->links as $link){
-					if($owner = $link->hasItem($name)){
-						$this->is_recursive = false;
-						return $owner;
+					if($link->has($name)){
+						return $link;
 					}
 				}
-			} catch(\Exception $e){
-				$this->is_recursive = false;
-				throw $e;
+			}finally{
+				$is_recursive = false;
 			}
-			$this->is_recursive = false;
 		}
-		return false;
+		return null;
 	}
 
 }

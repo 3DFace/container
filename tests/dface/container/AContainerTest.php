@@ -19,6 +19,7 @@ class AContainerTest extends \PHPUnit_Framework_TestCase {
 			}
 		]);
 		$this->assertEquals(1, $c['b/c']);
+		$this->assertEquals(1, $c('a'));
 	}
 
 	function testLocalOverweight(){
