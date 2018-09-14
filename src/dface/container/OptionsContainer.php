@@ -4,8 +4,10 @@
 namespace dface\container;
 
 use Interop\Container\ContainerInterface;
+use Interop\Container\Exception\ContainerException;
 
-class OptionsContainer extends BaseContainer {
+class OptionsContainer extends BaseContainer
+{
 
 	protected $options;
 	/** @var ContainerInterface */
@@ -15,35 +17,42 @@ class OptionsContainer extends BaseContainer {
 	 * @param string|array $options
 	 * @param ContainerInterface|null $parent
 	 */
-	function __construct($options, ContainerInterface $parent = null){
-		$this->options =  is_array($options) ? $options : $this->parseOpts($options);
+	public function __construct($options, ContainerInterface $parent = null)
+	{
+		$this->options = \is_array($options) ? $options : $this->parseOpts($options);
 		$this->parent = $parent;
 	}
 
-	function hasItem($name){
-		if(array_key_exists($name, $this->options)){
+	public function hasItem($name) : bool
+	{
+		if (array_key_exists($name, $this->options)) {
 			return true;
-		}else{
-			return $this->parent !== null && $this->parent->has($name);
 		}
+		return $this->parent !== null && $this->parent->has($name);
 	}
 
-	function getItem($name){
-		if(array_key_exists($name, $this->options)){
+	/**
+	 * @param $name
+	 * @return mixed
+	 * @throws NotFoundException
+	 * @throws ContainerException
+	 */
+	public function getItem($name)
+	{
+		if (array_key_exists($name, $this->options)) {
 			return $this->options[$name];
-		}else{
-			if($this->parent !== null){
-				return $this->parent->get($name);
-			}else{
-				throw new NotFoundException("Item '$name' not found");
-			}
 		}
+		if ($this->parent !== null) {
+			return $this->parent->get($name);
+		}
+		throw new NotFoundException("Item '$name' not found");
 	}
 
-	protected function parseOpts($str){
+	protected function parseOpts($str) : array
+	{
 		$opts = array();
-		foreach(preg_split("|\n+|", $str) as $line){
-			if(preg_match("|^\s*([\w\-.]+)\s*=\s*(\S+)\s*$|", $line, $match)){
+		foreach (preg_split("|\n+|", $str) as $line) {
+			if (preg_match("|^\s*([\w\-.]+)\s*=\s*(\S+)\s*$|", $line, $match)) {
 				$opts[$match[1]] = $match[2];
 			}
 		}

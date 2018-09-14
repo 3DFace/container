@@ -5,7 +5,13 @@ namespace dface\container;
 
 class PathContainerTest extends \PHPUnit_Framework_TestCase {
 
-	function testLevel0(){
+	/**
+	 * @throws ContainerException
+	 * @throws \Interop\Container\Exception\ContainerException
+	 * @throws \Interop\Container\Exception\NotFoundException
+	 */
+	public function testLevel0() : void
+	{
 		$f = new FactoryContainer([
 			'a' => function(){
 				return 1;
@@ -18,7 +24,13 @@ class PathContainerTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals(1, $c->getItem('a'));
 	}
 
-	function testLevel1(){
+	/**
+	 * @throws ContainerException
+	 * @throws \Interop\Container\Exception\ContainerException
+	 * @throws \Interop\Container\Exception\NotFoundException
+	 */
+	public function testLevel1() : void
+	{
 		$f = new FactoryContainer([
 			'a' => function(){
 				return new FactoryContainer([

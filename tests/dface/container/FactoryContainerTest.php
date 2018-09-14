@@ -5,14 +5,16 @@ namespace dface\container;
 
 class FactoryContainerTest extends \PHPUnit_Framework_TestCase {
 
-	function testPlainValue(){
+	public function testPlainValue() : void
+	{
 		$c = new FactoryContainer([
 			'a' => 1,
 		]);
 		$this->assertEquals(1, $c['a']);
 	}
 
-	function testNewInstances(){
+	public function testNewInstances() : void
+	{
 		$i = 0;
 		$c = new FactoryContainer([
 			'a' => function() use (&$i){
@@ -24,7 +26,8 @@ class FactoryContainerTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals(2, $c['a']);
 	}
 
-	function testHasItem(){
+	public function testHasItem() : void
+	{
 		$c = new FactoryContainer([
 			'a' => function(){
 				return 1;
@@ -34,7 +37,12 @@ class FactoryContainerTest extends \PHPUnit_Framework_TestCase {
 		$this->assertFalse($c->hasItem('b'));
 	}
 
-	function testGetItem(){
+	/**
+	 * @throws ContainerException
+	 * @throws NotFoundException
+	 */
+	public function testGetItem() : void
+	{
 		$c = new FactoryContainer([
 			'a' => function(){
 				return 1;
@@ -45,7 +53,12 @@ class FactoryContainerTest extends \PHPUnit_Framework_TestCase {
 		$c->getItem('b');
 	}
 
-	function testCyclicDependency(){
+	/**
+	 * @throws ContainerException
+	 * @throws NotFoundException
+	 */
+	public function testCyclicDependency() : void
+	{
 		$c = new FactoryContainer([
 			'a' => function($c){
 				return $c['a'];
@@ -55,7 +68,8 @@ class FactoryContainerTest extends \PHPUnit_Framework_TestCase {
 		$c->getItem('a');
 	}
 
-	function testLocalLookup(){
+	public function testLocalLookup() : void
+	{
 		$i = 1;
 		$c = new FactoryContainer([
 			'b'=>function() use (&$i){
@@ -69,7 +83,8 @@ class FactoryContainerTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals(2, $c['a']);
 	}
 
-	function testExternalLookup(){
+	public function testExternalLookup() : void
+	{
 		$i = 1;
 		$c1 = new FactoryContainer([
 			'a' => function() use (&$i){

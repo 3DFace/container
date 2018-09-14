@@ -4,38 +4,47 @@
 namespace dface\container;
 
 use Interop\Container\ContainerInterface;
+use Interop\Container\Exception\ContainerException;
+use Interop\Container\Exception\NotFoundException;
 
-class NamespaceContainer extends BaseContainer {
+class NamespaceContainer extends BaseContainer
+{
 
 	/** @var ContainerInterface */
 	protected $target;
 	protected $namespace;
 
-	function __construct(ContainerInterface $target, $namespace){
+	public function __construct(ContainerInterface $target, $namespace)
+	{
 		$this->target = $target;
 		$this->namespace = $namespace;
 	}
 
-	function hasItem($name){
+	public function hasItem($name) : bool
+	{
 		$mod_name = $this->namespace.$name;
-		if($this->target->has($mod_name)){
+		if ($this->target->has($mod_name)) {
 			return true;
-		}else{
-			if(strcmp($mod_name, $name)){
-				return $this->target->has($name);
-			}else{
-				return false;
-			}
 		}
+		if (strcmp($mod_name, $name)) {
+			return $this->target->has($name);
+		}
+		return false;
 	}
 
-	function getItem($name){
+	/**
+	 * @param $name
+	 * @return mixed
+	 * @throws ContainerException
+	 * @throws NotFoundException
+	 */
+	public function getItem($name)
+	{
 		$mod_name = $this->namespace.$name;
-		if($this->target->has($mod_name)){
+		if ($this->target->has($mod_name)) {
 			return $this->target->get($mod_name);
-		}else{
-			return $this->target->get($name);
 		}
+		return $this->target->get($name);
 	}
 
 } 

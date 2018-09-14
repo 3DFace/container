@@ -5,7 +5,8 @@ namespace dface\container;
 
 class AContainerTest extends \PHPUnit_Framework_TestCase {
 
-	function testA(){
+	public function testA() : void
+	{
 		$c = new AContainer([
 			'a' => function(){
 				return 1;
@@ -22,7 +23,8 @@ class AContainerTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals(1, $c('a'));
 	}
 
-	function testLocalOverweight(){
+	public function testLocalOverweight() : void
+	{
 		$c = new AContainer([
 			'a' => function(){
 				return 1;

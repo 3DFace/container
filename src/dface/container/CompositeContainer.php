@@ -4,15 +4,19 @@
 namespace dface\container;
 
 use Interop\Container\ContainerInterface;
+use Interop\Container\Exception\ContainerException;
+use Interop\Container\Exception\NotFoundException;
 
-class CompositeContainer extends BaseContainer {
+class CompositeContainer extends BaseContainer
+{
 
 	/** @var ContainerInterface[] */
 	protected $links = [];
 	/** @var ContainerInterface */
 	protected $parent;
 
-	function __construct($links = [], ContainerInterface $parent = null){
+	public function __construct(array $links = [], ContainerInterface $parent = null)
+	{
 		$this->addContainers($links);
 		$this->parent = $parent;
 	}
@@ -20,46 +24,55 @@ class CompositeContainer extends BaseContainer {
 	/**
 	 * @param ContainerInterface $container
 	 */
-	function addContainer($container){
+	public function addContainer($container) : void
+	{
 		$this->links[] = $container;
 	}
 
 	/**
 	 * @param ContainerInterface[] $containers
 	 */
-	function addContainers($containers){
-		foreach($containers as $container){
+	public function addContainers($containers) : void
+	{
+		foreach ($containers as $container) {
 			$this->addContainer($container);
 		}
 	}
 
-	function hasItem($name){
-		if($owner = $this->hasLinkedItem($name)){
+	public function hasItem($name) : bool
+	{
+		if ($owner = $this->hasLinkedItem($name)) {
 			return true;
-		}else{
-			return $this->parent !== null && $this->parent->has($name);
 		}
+		return $this->parent !== null && $this->parent->has($name);
 	}
 
-	function getItem($name){
-		if($owner = $this->hasLinkedItem($name)){
+	/**
+	 * @param $name
+	 * @return mixed
+	 * @throws ContainerException
+	 * @throws NotFoundException
+	 */
+	public function getItem($name)
+	{
+		if ($owner = $this->hasLinkedItem($name)) {
 			return $owner->get($name);
-		}else{
-			return $this->parent->get($name);
 		}
+		return $this->parent->get($name);
 	}
 
 	/**
 	 * @param $name
 	 * @return ContainerInterface|null
 	 */
-	protected function hasLinkedItem($name){
+	protected function hasLinkedItem($name) : ?ContainerInterface
+	{
 		static $is_recursive = false;
-		if(!$is_recursive){
+		if (!$is_recursive) {
 			$is_recursive = true;
 			try{
-				foreach($this->links as $link){
-					if($link->has($name)){
+				foreach ($this->links as $link) {
+					if ($link->has($name)) {
 						return $link;
 					}
 				}

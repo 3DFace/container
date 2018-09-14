@@ -2,18 +2,19 @@
 
 namespace dface\container;
 
-interface Container {
+interface Container
+{
 
 	/**
 	 * @param $name string
 	 * @return bool
 	 */
-	function hasItem($name);
+	public function hasItem($name) : bool;
 
 	/**
 	 * @param $name
 	 * @return mixed
 	 */
-	function getItem($name);
+	public function getItem($name);
 
 }

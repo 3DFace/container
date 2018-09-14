@@ -5,23 +5,26 @@ namespace dface\container;
 
 class DefaultPathResolverTest extends \PHPUnit_Framework_TestCase {
 
-	function testOneChar(){
+	public function testOneChar() : void
+	{
 		$pr = new DefaultPathResolver('/');
-		list($container_name, $item_name) = $pr->resolve('asd/zxc');
+		[$container_name, $item_name] = $pr->resolve('asd/zxc');
 		$this->assertEquals('asd', $container_name);
 		$this->assertEquals('zxc', $item_name);
 	}
 
-	function testTwoChar(){
+	public function testTwoChar() : void
+	{
 		$pr = new DefaultPathResolver('!@');
-		list($container_name, $item_name) = $pr->resolve('asd!@zxc');
+		[$container_name, $item_name] = $pr->resolve('asd!@zxc');
 		$this->assertEquals('asd', $container_name);
 		$this->assertEquals('zxc', $item_name);
 	}
 
-	function testNoPath(){
+	public function testNoPath() : void
+	{
 		$pr = new DefaultPathResolver('/');
-		list($container_name, $item_name) = $pr->resolve('asd');
+		[$container_name, $item_name] = $pr->resolve('asd');
 		$this->assertNull($container_name);
 		$this->assertEquals('asd', $item_name);
 	}

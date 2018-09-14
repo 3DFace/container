@@ -5,6 +5,7 @@ namespace dface\container;
 
 use Interop\Container\Exception\NotFoundException as NFE;
 
-class NotFoundException extends ContainerException implements NFE {
+class NotFoundException extends ContainerException implements NFE
+{
 
 }

@@ -4,24 +4,51 @@ namespace dface\container;
 
 use Interop\Container\ContainerInterface;
 
-class AContainer extends BaseContainer {
+class AContainer extends BaseContainer
+{
 
 	/** @var Container */
-	protected $container;
+	private $container;
+	/** @var bool[] */
+	private $has_cache = [];
+	/** @var array */
+	private $get_cache = [];
 
-	function __construct(array $definitions = [], ContainerInterface $parent = null){
+	public function __construct(array $definitions = [], ContainerInterface $parent = null)
+	{
 		$lookup = $parent ? new ContainerLink($this, $parent) : $this;
 		$factories = new FactoryContainer($definitions, $lookup);
 		$singletons = new SingletonContainer($factories);
 		$this->container = new PathContainer($singletons);
 	}
 
-	function hasItem($name){
-		return $this->container->hasItem($name);
+	/**
+	 * @param string $name
+	 * @return bool
+	 * @throws \Interop\Container\Exception\ContainerException
+	 * @throws \Interop\Container\Exception\NotFoundException
+	 */
+	public function hasItem($name) : bool
+	{
+		if (!isset($this->has_cache[$name])) {
+			$this->has_cache[$name] = $this->container->hasItem($name);
+		}
+		return $this->has_cache[$name];
 	}
 
-	function getItem($name){
-		return $this->container->getItem($name);
+	/**
+	 * @param $name
+	 * @return mixed
+	 * @throws ContainerException
+	 * @throws \Interop\Container\Exception\ContainerException
+	 * @throws \Interop\Container\Exception\NotFoundException
+	 */
+	public function getItem($name)
+	{
+		if (!isset($this->get_cache[$name])) {
+			$this->get_cache[$name] = $this->container->getItem($name);
+		}
+		return $this->get_cache[$name];
 	}
 
 }

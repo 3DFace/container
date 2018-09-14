@@ -3,8 +3,9 @@
 
 namespace dface\container;
 
-interface PathResolver {
+interface PathResolver
+{
 
-	function resolve($path_name);
+	public function resolve($path_name) : array;
 
 }

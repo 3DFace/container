@@ -5,6 +5,7 @@ namespace dface\container;
 
 use Interop\Container\Exception\ContainerException as CE;
 
-class ContainerException extends \Exception implements CE {
+class ContainerException extends \Exception implements CE
+{
 
 }

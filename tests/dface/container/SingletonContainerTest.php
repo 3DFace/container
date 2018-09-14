@@ -5,7 +5,8 @@ namespace dface\container;
 
 class SingletonContainerTest extends \PHPUnit_Framework_TestCase {
 
-	function testSingleInstance(){
+	public function testSingleInstance() : void
+	{
 		$i = 0;
 		$f = new FactoryContainer([
 			'a' => function() use (&$i){
@@ -17,7 +18,8 @@ class SingletonContainerTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals(0, $c['a']);
 	}
 
-	function testHasItem(){
+	public function testHasItem() : void
+	{
 		$f = new FactoryContainer([
 			'a' => function(){
 				throw new ContainerException("Must not be called on 'hasItem'");
@@ -28,7 +30,12 @@ class SingletonContainerTest extends \PHPUnit_Framework_TestCase {
 		$this->assertFalse($c->hasItem('b'));
 	}
 
-	function testGetItem(){
+	/**
+	 * @throws \Interop\Container\Exception\ContainerException
+	 * @throws \Interop\Container\Exception\NotFoundException
+	 */
+	public function testGetItem() : void
+	{
 		$f = new FactoryContainer([
 			'a' => function(){
 				return 1;
@@ -40,7 +47,12 @@ class SingletonContainerTest extends \PHPUnit_Framework_TestCase {
 		$c->getItem('b');
 	}
 
-	function testCyclicDependency(){
+	/**
+	 * @throws \Interop\Container\Exception\ContainerException
+	 * @throws \Interop\Container\Exception\NotFoundException
+	 */
+	public function testCyclicDependency() : void
+	{
 		$f = new FactoryContainer([
 			'a' => function($c){
 				return $c['a'];
@@ -51,7 +63,8 @@ class SingletonContainerTest extends \PHPUnit_Framework_TestCase {
 		$c->getItem('a');
 	}
 
-	function testLocalLookup(){
+	public function testLocalLookup() : void
+	{
 		$i = 1;
 		$f = new FactoryContainer([
 			'b'=>function() use (&$i){
@@ -66,7 +79,8 @@ class SingletonContainerTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals(1, $c['a']);
 	}
 
-	function testExternalLookup(){
+	public function testExternalLookup() : void
+	{
 		$i = 1;
 		$f1 = new FactoryContainer([
 			'a' => function() use (&$i){
