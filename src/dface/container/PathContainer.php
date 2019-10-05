@@ -23,17 +23,22 @@ class PathContainer extends BaseContainer
 	 * @param string $name
 	 * @return bool
 	 * @throws \Interop\Container\Exception\ContainerException
-	 * @throws \Interop\Container\Exception\NotFoundException
 	 */
 	public function hasItem($name) : bool
 	{
-		/** @var $container ContainerInterface */
-		try{
-			[$container, $resolved_name] = $this->splitContainerAndItemName($name);
-		}catch (ContainerException $e){
+		[$container_name, $item_name] = $this->path_resolver->resolve($name);
+		if($container_name !== null) {
+			if ($this->container->hasItem($container_name)) {
+				/** @var $container ContainerInterface */
+				$container = $this->container->getItem($container_name);
+				if (!$container instanceof ContainerInterface) {
+					throw new ContainerException("Container '$container_name' in path '$name' must be an instance of ".ContainerInterface::class);
+				}
+				return $container->has($item_name);
+			}
 			return false;
 		}
-		return $container->has($resolved_name);
+		return $this->container->hasItem($item_name);
 	}
 
 	/**
@@ -45,29 +50,16 @@ class PathContainer extends BaseContainer
 	 */
 	public function getItem($name)
 	{
-		/** @var $container ContainerInterface */
-		[$container, $resolved_name] = $this->splitContainerAndItemName($name);
-		return $container->get($resolved_name);
-	}
-
-	/**
-	 * @param $full_name
-	 * @return array|null
-	 * @throws ContainerException
-	 * @throws \Interop\Container\Exception\ContainerException
-	 * @throws \Interop\Container\Exception\NotFoundException
-	 */
-	protected function splitContainerAndItemName($full_name) : ?array
-	{
-		[$container_name, $item_name] = $this->path_resolver->resolve($full_name);
-		if ($container_name !== null) {
-			$container = $this->getItem($container_name);
+		[$container_name, $item_name] = $this->path_resolver->resolve($name);
+		if($container_name !== null) {
+			/** @var $container ContainerInterface */
+			$container = $this->container->getItem($container_name);
 			if (!$container instanceof ContainerInterface) {
-				throw new ContainerException("Container '$container_name' in path '$full_name' must be an instance of ".ContainerInterface::class);
+				throw new ContainerException("Container '$container_name' in path '$name' must be an instance of ".ContainerInterface::class);
 			}
-			return [$container, $item_name];
+			return $container->get($item_name);
 		}
-		return [$this->container, $full_name];
+		return $this->container->get($item_name);
 	}
 
 }
