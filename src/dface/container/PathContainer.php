@@ -4,6 +4,8 @@
 namespace dface\container;
 
 use Interop\Container\ContainerInterface;
+use Interop\Container\Exception\ContainerException as InteropContainerException;
+use Interop\Container\Exception\NotFoundException as InteropNotFoundException;
 
 class PathContainer extends BaseContainer
 {
@@ -22,7 +24,6 @@ class PathContainer extends BaseContainer
 	/**
 	 * @param string $name
 	 * @return bool
-	 * @throws \Interop\Container\Exception\ContainerException
 	 */
 	public function hasItem($name) : bool
 	{
@@ -32,7 +33,7 @@ class PathContainer extends BaseContainer
 				/** @var $container ContainerInterface */
 				$container = $this->container->getItem($container_name);
 				if (!$container instanceof ContainerInterface) {
-					throw new ContainerException("Container '$container_name' in path '$name' must be an instance of ".ContainerInterface::class);
+					return false;
 				}
 				return $container->has($item_name);
 			}
@@ -45,15 +46,19 @@ class PathContainer extends BaseContainer
 	 * @param $name
 	 * @return mixed
 	 * @throws ContainerException
-	 * @throws \Interop\Container\Exception\ContainerException
-	 * @throws \Interop\Container\Exception\NotFoundException
+	 * @throws InteropContainerException
+	 * @throws InteropNotFoundException
 	 */
 	public function getItem($name)
 	{
 		[$container_name, $item_name] = $this->path_resolver->resolve($name);
 		if($container_name !== null) {
-			/** @var $container ContainerInterface */
-			$container = $this->container->getItem($container_name);
+			try{
+				/** @var $container ContainerInterface */
+				$container = $this->container->get($container_name);
+			}catch (InteropNotFoundException $e){
+				throw new NotFoundException("Item '$name' not found", 0, $e);
+			}
 			if (!$container instanceof ContainerInterface) {
 				throw new ContainerException("Container '$container_name' in path '$name' must be an instance of ".ContainerInterface::class);
 			}
