@@ -3,9 +3,8 @@
 
 namespace dface\container;
 
-use Interop\Container\ContainerInterface;
-use Interop\Container\Exception\ContainerException as InteropContainerException;
-use Interop\Container\Exception\NotFoundException as InteropNotFoundException;
+use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 abstract class HandyContainer implements \ArrayAccess, ContainerInterface
 {
@@ -13,13 +12,12 @@ abstract class HandyContainer implements \ArrayAccess, ContainerInterface
 	/**
 	 * @param mixed $name
 	 * @return bool|mixed
-	 * @throws InteropContainerException
 	 */
 	public function offsetExists($name)
 	{
 		try{
 			[$container, $item_name] = $this->getTargetContainerAndItemName($name);
-		}catch (InteropNotFoundException $e){
+		}catch (NotFoundExceptionInterface $e){
 			return false;
 		}
 		if (!$container instanceof ContainerInterface) {
@@ -31,8 +29,8 @@ abstract class HandyContainer implements \ArrayAccess, ContainerInterface
 	/**
 	 * @param mixed $name
 	 * @return mixed
-	 * @throws InteropContainerException
-	 * @throws InteropNotFoundException
+	 * @throws ContainerException
+	 * @throws NotFoundException
 	 */
 	public function offsetGet($name)
 	{
@@ -44,7 +42,7 @@ abstract class HandyContainer implements \ArrayAccess, ContainerInterface
 				throw new ContainerException("'$relative_name' expected to be a ContainerInterface, got '$type'");
 			}
 			return $container->get($item_name);
-		}catch (InteropNotFoundException $e){
+		}catch (NotFoundExceptionInterface $e){
 			throw new NotFoundException("'$name' not found", 0, $e);
 		}
 	}
@@ -77,8 +75,6 @@ abstract class HandyContainer implements \ArrayAccess, ContainerInterface
 	/**
 	 * @param string $name
 	 * @return array
-	 * @throws InteropContainerException
-	 * @throws InteropNotFoundException
 	 */
 	private function getTargetContainerAndItemName(string $name) : array
 	{

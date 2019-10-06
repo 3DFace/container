@@ -3,9 +3,7 @@
 
 namespace dface\container;
 
-use Interop\Container\ContainerInterface;
-use Interop\Container\Exception\ContainerException;
-use Interop\Container\Exception\NotFoundException;
+use Psr\Container\ContainerInterface;
 
 class CompositeContainer extends HandyContainer
 {
@@ -50,8 +48,6 @@ class CompositeContainer extends HandyContainer
 	/**
 	 * @param $name
 	 * @return mixed
-	 * @throws ContainerException
-	 * @throws NotFoundException
 	 */
 	public function getItem($name)
 	{

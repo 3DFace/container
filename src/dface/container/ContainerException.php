@@ -3,9 +3,9 @@
 
 namespace dface\container;
 
-use Interop\Container\Exception\ContainerException as CE;
+use Psr\Container\ContainerExceptionInterface;
 
-class ContainerException extends \Exception implements CE
+class ContainerException extends \Exception implements ContainerExceptionInterface
 {
 
 }

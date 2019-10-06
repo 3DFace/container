@@ -3,7 +3,7 @@
 
 namespace dface\container;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 class SingletonContainer implements ContainerInterface
 {
@@ -29,8 +29,6 @@ class SingletonContainer implements ContainerInterface
 	/**
 	 * @param $name
 	 * @return mixed
-	 * @throws \Interop\Container\Exception\ContainerException
-	 * @throws \Interop\Container\Exception\NotFoundException
 	 */
 	public function get($name)
 	{

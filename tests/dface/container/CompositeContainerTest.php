@@ -5,10 +5,6 @@ namespace dface\container;
 
 class CompositeContainerTest  extends \PHPUnit_Framework_TestCase {
 
-	/**
-	 * @throws \Interop\Container\Exception\ContainerException
-	 * @throws \Interop\Container\Exception\NotFoundException
-	 */
 	public function testA() : void
 	{
 		$p = new AContainer([

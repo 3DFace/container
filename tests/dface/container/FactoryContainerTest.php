@@ -3,7 +3,7 @@
 
 namespace dface\container;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 class FactoryContainerTest extends \PHPUnit_Framework_TestCase
 {

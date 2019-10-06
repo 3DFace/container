@@ -3,7 +3,7 @@
 
 namespace dface\container;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 class SingletonContainerTest extends \PHPUnit_Framework_TestCase
 {
@@ -33,10 +33,6 @@ class SingletonContainerTest extends \PHPUnit_Framework_TestCase
 		$this->assertFalse($c->has('b'));
 	}
 
-	/**
-	 * @throws \Interop\Container\Exception\ContainerException
-	 * @throws \Interop\Container\Exception\NotFoundException
-	 */
 	public function testGetItem() : void
 	{
 		$f = new FactoryContainer([
@@ -50,10 +46,6 @@ class SingletonContainerTest extends \PHPUnit_Framework_TestCase
 		$c->get('b');
 	}
 
-	/**
-	 * @throws \Interop\Container\Exception\ContainerException
-	 * @throws \Interop\Container\Exception\NotFoundException
-	 */
 	public function testCyclicDependency() : void
 	{
 		$f = new FactoryContainer([

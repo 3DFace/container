@@ -3,7 +3,7 @@
 
 namespace dface\container;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 class Explorer
 {
@@ -21,8 +21,6 @@ class Explorer
 	/**
 	 * @param null $containerName
 	 * @return array
-	 * @throws \Interop\Container\Exception\ContainerException
-	 * @throws \Interop\Container\Exception\NotFoundException
 	 */
 	public function getNames($containerName = null) : array
 	{
@@ -34,8 +32,6 @@ class Explorer
 	/**
 	 * @param null $containerName
 	 * @return array
-	 * @throws \Interop\Container\Exception\ContainerException
-	 * @throws \Interop\Container\Exception\NotFoundException
 	 */
 	public function getServicesInfo($containerName = null) : array
 	{
@@ -52,8 +48,6 @@ class Explorer
 	 * @param $containerName
 	 * @param $serviceShortName
 	 * @return mixed
-	 * @throws \Interop\Container\Exception\ContainerException
-	 * @throws \Interop\Container\Exception\NotFoundException
 	 */
 	public function getServiceDescription($containerName, $serviceShortName)
 	{
@@ -69,8 +63,6 @@ class Explorer
 	 * @param $containerName
 	 * @param $serviceShortName
 	 * @return array|null
-	 * @throws \Interop\Container\Exception\ContainerException
-	 * @throws \Interop\Container\Exception\NotFoundException
 	 */
 	public function getServiceDetails($containerName, $serviceShortName) : ?array
 	{
@@ -86,8 +78,6 @@ class Explorer
 	/**
 	 * @param ContainerInterface $container
 	 * @return array|mixed
-	 * @throws \Interop\Container\Exception\ContainerException
-	 * @throws \Interop\Container\Exception\NotFoundException
 	 */
 	private function getDescriptions(ContainerInterface $container)
 	{

@@ -3,7 +3,7 @@
 
 namespace dface\container;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 class ContainerLink extends HandyContainer
 {
@@ -27,8 +27,6 @@ class ContainerLink extends HandyContainer
 	/**
 	 * @param $name
 	 * @return mixed
-	 * @throws \Interop\Container\Exception\ContainerException
-	 * @throws \Interop\Container\Exception\NotFoundException
 	 */
 	public function getItem($name)
 	{

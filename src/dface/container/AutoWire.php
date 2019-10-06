@@ -3,7 +3,7 @@
 
 namespace dface\container;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 class AutoWire
 {
@@ -13,8 +13,6 @@ class AutoWire
 	 * @param $class
 	 * @param array $explicit_arguments
 	 * @return object
-	 * @throws \Interop\Container\Exception\ContainerException
-	 * @throws \Interop\Container\Exception\NotFoundException
 	 * @throws \ReflectionException
 	 */
 	public static function construct(ContainerInterface $container, $class, array $explicit_arguments = [])
@@ -53,8 +51,6 @@ class AutoWire
 	 * @param $object
 	 * @param array $exclude
 	 * @return mixed
-	 * @throws \Interop\Container\Exception\ContainerException
-	 * @throws \Interop\Container\Exception\NotFoundException
 	 */
 	public static function setProperties(ContainerInterface $container, $object, array $exclude = [])
 	{

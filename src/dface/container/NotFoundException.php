@@ -3,9 +3,8 @@
 
 namespace dface\container;
 
-use Interop\Container\Exception\NotFoundException as NFE;
+use Psr\Container\NotFoundExceptionInterface;
 
-class NotFoundException extends ContainerException implements NFE
+class NotFoundException extends ContainerException implements NotFoundExceptionInterface
 {
-
 }
