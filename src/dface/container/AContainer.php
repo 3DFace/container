@@ -4,7 +4,7 @@ namespace dface\container;
 
 use Interop\Container\ContainerInterface;
 
-class AContainer extends BaseContainer
+class AContainer extends HandyContainer
 {
 
 	/** @var ContainerInterface */

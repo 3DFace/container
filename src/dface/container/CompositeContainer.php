@@ -7,7 +7,7 @@ use Interop\Container\ContainerInterface;
 use Interop\Container\Exception\ContainerException;
 use Interop\Container\Exception\NotFoundException;
 
-class CompositeContainer extends BaseContainer
+class CompositeContainer extends HandyContainer
 {
 
 	/** @var ContainerInterface[] */

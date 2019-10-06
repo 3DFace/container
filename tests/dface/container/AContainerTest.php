@@ -89,7 +89,7 @@ class AContainerTest extends \PHPUnit_Framework_TestCase {
 				], $c);
 			}
 		]);
-		$this->assertEquals(1, $c['a/z/x']);
+		$this->assertEquals(1, $c['a/b/c']);
 	}
 
 }

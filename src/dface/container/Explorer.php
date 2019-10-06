@@ -3,10 +3,12 @@
 
 namespace dface\container;
 
+use Interop\Container\ContainerInterface;
+
 class Explorer
 {
 
-	/** @var BaseContainer */
+	/** @var ContainerInterface */
 	private $basePathContainer;
 	private $descriptor;
 
@@ -19,10 +21,12 @@ class Explorer
 	/**
 	 * @param null $containerName
 	 * @return array
+	 * @throws \Interop\Container\Exception\ContainerException
+	 * @throws \Interop\Container\Exception\NotFoundException
 	 */
 	public function getNames($containerName = null) : array
 	{
-		$c = $containerName ? $this->basePathContainer[$containerName] : $this->basePathContainer;
+		$c = $containerName ? $this->basePathContainer->get($containerName) : $this->basePathContainer;
 		$d = $this->getDescriptions($c);
 		return array_keys($d);
 	}
@@ -30,14 +34,16 @@ class Explorer
 	/**
 	 * @param null $containerName
 	 * @return array
+	 * @throws \Interop\Container\Exception\ContainerException
+	 * @throws \Interop\Container\Exception\NotFoundException
 	 */
 	public function getServicesInfo($containerName = null) : array
 	{
-		$c = $containerName ? $this->basePathContainer[$containerName] : $this->basePathContainer;
+		$c = $containerName ? $this->basePathContainer->get($containerName) : $this->basePathContainer;
 		$d = $this->getDescriptions($c);
 		$result = [];
 		foreach ($d as $shortName => [$class, $desc]) {
-			$result[] = $this->extractServiceDetails($shortName, $class, $desc);
+			$result[] = self::extractServiceDetails($shortName, $class, $desc);
 		}
 		return $result;
 	}
@@ -46,10 +52,12 @@ class Explorer
 	 * @param $containerName
 	 * @param $serviceShortName
 	 * @return mixed
+	 * @throws \Interop\Container\Exception\ContainerException
+	 * @throws \Interop\Container\Exception\NotFoundException
 	 */
 	public function getServiceDescription($containerName, $serviceShortName)
 	{
-		$c = $containerName ? $this->basePathContainer->getItem($containerName) : $this->basePathContainer;
+		$c = $containerName ? $this->basePathContainer->get($containerName) : $this->basePathContainer;
 		$d = $this->getDescriptions($c);
 		if (isset($d[$serviceShortName])) {
 			return $d[$serviceShortName];
@@ -61,24 +69,32 @@ class Explorer
 	 * @param $containerName
 	 * @param $serviceShortName
 	 * @return array|null
+	 * @throws \Interop\Container\Exception\ContainerException
+	 * @throws \Interop\Container\Exception\NotFoundException
 	 */
 	public function getServiceDetails($containerName, $serviceShortName) : ?array
 	{
-		$c = $containerName ? $this->basePathContainer->getItem($containerName) : $this->basePathContainer;
+		$c = $containerName ? $this->basePathContainer->get($containerName) : $this->basePathContainer;
 		$d = $this->getDescriptions($c);
 		if (isset($d[$serviceShortName])) {
 			[$class, $desc] = $d[$serviceShortName];
-			return $this->extractServiceDetails($serviceShortName, $class, $desc);
+			return self::extractServiceDetails($serviceShortName, $class, $desc);
 		}
 		throw new \InvalidArgumentException("Service $serviceShortName not described");
 	}
 
-	private function getDescriptions(Container $container)
+	/**
+	 * @param ContainerInterface $container
+	 * @return array|mixed
+	 * @throws \Interop\Container\Exception\ContainerException
+	 * @throws \Interop\Container\Exception\NotFoundException
+	 */
+	private function getDescriptions(ContainerInterface $container)
 	{
-		return $container->hasItem($this->descriptor) ? $container->getItem($this->descriptor) : [];
+		return $container->has($this->descriptor) ? $container->get($this->descriptor) : [];
 	}
 
-	private function extractServiceDetails($shortName, $class, $desc) : array
+	private static function extractServiceDetails($shortName, $class, $desc) : array
 	{
 		try{
 			$reflectionClass = new \ReflectionClass($class);
@@ -86,7 +102,7 @@ class Explorer
 			throw new \RuntimeException($e->getMessage(), 0, $e);
 		}
 		$methods = [];
-		$is_container = is_a($class, Container::class, true);
+		$is_container = \is_a($class, ContainerInterface::class, true);
 		if (!$is_container) {
 			foreach ($reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
 				if (!$method->isConstructor()) {
@@ -96,7 +112,7 @@ class Explorer
 
 					$methods[] = [
 						'name' => $method->getName(),
-						'doc' => preg_replace('/^\t+/m', '', $method->getDocComment()),
+						'doc' => \preg_replace('/^\t+/m', '', $method->getDocComment()),
 						'params' => $params,
 					];
 				}

@@ -7,7 +7,7 @@ use Interop\Container\ContainerInterface;
 use Interop\Container\Exception\ContainerException as InteropContainerException;
 use Interop\Container\Exception\NotFoundException as InteropNotFoundException;
 
-abstract class BaseContainer implements Container, \ArrayAccess, ContainerInterface
+abstract class HandyContainer implements \ArrayAccess, ContainerInterface
 {
 
 	/**
@@ -49,12 +49,12 @@ abstract class BaseContainer implements Container, \ArrayAccess, ContainerInterf
 		}
 	}
 
-	public function offsetSet($offset, $value)
+	public function offsetSet($offset, $value) : void
 	{
 		throw new \RuntimeException('Unsupported container access');
 	}
 
-	public function offsetUnset($offset)
+	public function offsetUnset($offset) : void
 	{
 		throw new \RuntimeException('Unsupported container access');
 	}
@@ -64,7 +64,7 @@ abstract class BaseContainer implements Container, \ArrayAccess, ContainerInterf
 		return $this->getItem($id);
 	}
 
-	public function has($id)
+	public function has($id) : bool
 	{
 		return $this->hasItem($id);
 	}
@@ -93,5 +93,9 @@ abstract class BaseContainer implements Container, \ArrayAccess, ContainerInterf
 		}
 		return [$container, $item_name];
 	}
+
+	abstract protected function getItem($name);
+
+	abstract protected function hasItem($name) : bool;
 
 }
