@@ -15,36 +15,16 @@ abstract class HandyContainer implements \ArrayAccess, ContainerInterface
 	 */
 	public function offsetExists($name)
 	{
-		try{
-			[$container, $item_name] = $this->getTargetContainerAndItemName($name);
-		}catch (NotFoundExceptionInterface $e){
-			return false;
-		}
-		if (!$container instanceof ContainerInterface) {
-			return false;
-		}
-		return $container->has($item_name);
+		return $this->has($name);
 	}
 
 	/**
 	 * @param mixed $name
 	 * @return mixed
-	 * @throws ContainerException
-	 * @throws NotFoundException
 	 */
 	public function offsetGet($name)
 	{
-		try{
-			[$container, $item_name] = $this->getTargetContainerAndItemName($name);
-			if (!$container instanceof ContainerInterface) {
-				$type = \gettype($container);
-				$relative_name = \substr($name, 0, -\strlen($item_name));
-				throw new ContainerException("'$relative_name' expected to be a ContainerInterface, got '$type'");
-			}
-			return $container->get($item_name);
-		}catch (NotFoundExceptionInterface $e){
-			throw new NotFoundException("'$name' not found", 0, $e);
-		}
+		return $this->get($name);
 	}
 
 	public function offsetSet($offset, $value) : void
@@ -57,14 +37,40 @@ abstract class HandyContainer implements \ArrayAccess, ContainerInterface
 		throw new \RuntimeException('Unsupported container access');
 	}
 
-	public function get($id)
+	public function get($name)
 	{
-		return $this->getItem($id);
+		$path_arr = \explode('/', $name);
+		if(\count($path_arr) === 1){
+			return $this->getItem($name);
+		}
+		try{
+			[$container, $item_name] = $this->getDeepestContainerAndItemName($name);
+			if (!$container instanceof ContainerInterface) {
+				$type = \gettype($container);
+				$relative_name = \substr($name, 0, -\strlen($item_name));
+				throw new ContainerException("'$relative_name' expected to be a ContainerInterface, got '$type'");
+			}
+			return $container->get($item_name);
+		}catch (NotFoundExceptionInterface $e){
+			throw new NotFoundException("'$name' not found", 0, $e);
+		}
 	}
 
-	public function has($id) : bool
+	public function has($name) : bool
 	{
-		return $this->hasItem($id);
+		$path_arr = \explode('/', $name);
+		if(\count($path_arr) === 1){
+			return $this->hasItem($name);
+		}
+		try{
+			[$container, $item_name] = $this->getDeepestContainerAndItemName($name);
+		}catch (NotFoundExceptionInterface $e){
+			return false;
+		}
+		if (!$container instanceof ContainerInterface) {
+			return false;
+		}
+		return $container->has($item_name);
 	}
 
 	public function __invoke($id)
@@ -76,7 +82,7 @@ abstract class HandyContainer implements \ArrayAccess, ContainerInterface
 	 * @param string $name
 	 * @return array
 	 */
-	private function getTargetContainerAndItemName(string $name) : array
+	private function getDeepestContainerAndItemName(string $name) : array
 	{
 		$path_arr = \explode('/', $name);
 		$item_index = \count($path_arr) - 1;
