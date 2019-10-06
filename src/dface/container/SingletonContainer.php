@@ -5,12 +5,12 @@ namespace dface\container;
 
 use Interop\Container\ContainerInterface;
 
-class SingletonContainer extends BaseContainer
+class SingletonContainer implements ContainerInterface
 {
 
 	/** @var ContainerInterface */
-	protected $factory;
-	protected $items = [];
+	private $factory;
+	private $items = [];
 
 	/**
 	 * SingletonContainer constructor.
@@ -21,9 +21,9 @@ class SingletonContainer extends BaseContainer
 		$this->factory = $factory;
 	}
 
-	public function hasItem($name) : bool
+	public function has($name) : bool
 	{
-		return array_key_exists($name, $this->items) || $this->factory->has($name);
+		return \array_key_exists($name, $this->items) || $this->factory->has($name);
 	}
 
 	/**
@@ -32,9 +32,9 @@ class SingletonContainer extends BaseContainer
 	 * @throws \Interop\Container\Exception\ContainerException
 	 * @throws \Interop\Container\Exception\NotFoundException
 	 */
-	public function getItem($name)
+	public function get($name)
 	{
-		if (array_key_exists($name, $this->items)) {
+		if (\array_key_exists($name, $this->items)) {
 			return $this->items[$name];
 		}
 		$item = $this->factory->get($name);

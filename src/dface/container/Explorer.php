@@ -6,9 +6,9 @@ namespace dface\container;
 class Explorer
 {
 
-	/** @var PathContainer */
-	protected $basePathContainer;
-	protected $descriptor;
+	/** @var BaseContainer */
+	private $basePathContainer;
+	private $descriptor;
 
 	public function __construct($basePathContainer, $descriptor)
 	{
@@ -19,13 +19,10 @@ class Explorer
 	/**
 	 * @param null $containerName
 	 * @return array
-	 * @throws ContainerException
-	 * @throws \Interop\Container\Exception\ContainerException
-	 * @throws \Interop\Container\Exception\NotFoundException
 	 */
 	public function getNames($containerName = null) : array
 	{
-		$c = $containerName ? $this->basePathContainer->getItem($containerName) : $this->basePathContainer;
+		$c = $containerName ? $this->basePathContainer[$containerName] : $this->basePathContainer;
 		$d = $this->getDescriptions($c);
 		return array_keys($d);
 	}
@@ -33,13 +30,10 @@ class Explorer
 	/**
 	 * @param null $containerName
 	 * @return array
-	 * @throws ContainerException
-	 * @throws \Interop\Container\Exception\ContainerException
-	 * @throws \Interop\Container\Exception\NotFoundException
 	 */
 	public function getServicesInfo($containerName = null) : array
 	{
-		$c = $containerName ? $this->basePathContainer->getItem($containerName) : $this->basePathContainer;
+		$c = $containerName ? $this->basePathContainer[$containerName] : $this->basePathContainer;
 		$d = $this->getDescriptions($c);
 		$result = [];
 		foreach ($d as $shortName => [$class, $desc]) {
@@ -52,9 +46,6 @@ class Explorer
 	 * @param $containerName
 	 * @param $serviceShortName
 	 * @return mixed
-	 * @throws ContainerException
-	 * @throws \Interop\Container\Exception\ContainerException
-	 * @throws \Interop\Container\Exception\NotFoundException
 	 */
 	public function getServiceDescription($containerName, $serviceShortName)
 	{
@@ -70,9 +61,6 @@ class Explorer
 	 * @param $containerName
 	 * @param $serviceShortName
 	 * @return array|null
-	 * @throws ContainerException
-	 * @throws \Interop\Container\Exception\ContainerException
-	 * @throws \Interop\Container\Exception\NotFoundException
 	 */
 	public function getServiceDetails($containerName, $serviceShortName) : ?array
 	{
@@ -85,12 +73,12 @@ class Explorer
 		throw new \InvalidArgumentException("Service $serviceShortName not described");
 	}
 
-	protected function getDescriptions(Container $container)
+	private function getDescriptions(Container $container)
 	{
 		return $container->hasItem($this->descriptor) ? $container->getItem($this->descriptor) : [];
 	}
 
-	protected function extractServiceDetails($shortName, $class, $desc) : array
+	private function extractServiceDetails($shortName, $class, $desc) : array
 	{
 		try{
 			$reflectionClass = new \ReflectionClass($class);
@@ -102,7 +90,7 @@ class Explorer
 		if (!$is_container) {
 			foreach ($reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
 				if (!$method->isConstructor()) {
-					$params = array_map(function (\ReflectionParameter $param) {
+					$params = \array_map(static function (\ReflectionParameter $param) {
 						return $param->getName();
 					}, $method->getParameters());
 

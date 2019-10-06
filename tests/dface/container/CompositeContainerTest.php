@@ -12,34 +12,34 @@ class CompositeContainerTest  extends \PHPUnit_Framework_TestCase {
 	public function testA() : void
 	{
 		$p = new AContainer([
-			'x' => function(){
+			'x' => static function(){
 				return 0;
 			},
 		]);
 
 		$c1 = new AContainer([
-			'a' => function(){
+			'a' => static function(){
 				return 1;
 			},
-			'b' => function(){
+			'b' => static function(){
 				return 1;
 			},
 		]);
 
 		$c2 = new AContainer([
-			'a' => function(){
+			'a' => static function(){
 				return 2;
 			},
-			'c' => function(){
+			'c' => static function(){
 				return 2;
 			},
 		]);
 
 		$c3 = new AContainer([
-			'a' => function(){
+			'a' => static function(){
 				return 3;
 			},
-			'd' => function(){
+			'd' => static function(){
 				return 3;
 			},
 		]);

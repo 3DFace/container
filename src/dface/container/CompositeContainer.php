@@ -11,9 +11,9 @@ class CompositeContainer extends BaseContainer
 {
 
 	/** @var ContainerInterface[] */
-	protected $links = [];
+	private $links = [];
 	/** @var ContainerInterface */
-	protected $parent;
+	private $parent;
 
 	public function __construct(array $links = [], ContainerInterface $parent = null)
 	{
@@ -65,7 +65,7 @@ class CompositeContainer extends BaseContainer
 	 * @param $name
 	 * @return ContainerInterface|null
 	 */
-	protected function hasLinkedItem($name) : ?ContainerInterface
+	private function hasLinkedItem($name) : ?ContainerInterface
 	{
 		static $is_recursive = false;
 		if (!$is_recursive) {

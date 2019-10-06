@@ -4,18 +4,49 @@
 namespace dface\container;
 
 use Interop\Container\ContainerInterface;
+use Interop\Container\Exception\ContainerException as InteropContainerException;
+use Interop\Container\Exception\NotFoundException as InteropNotFoundException;
 
 abstract class BaseContainer implements Container, \ArrayAccess, ContainerInterface
 {
 
-	public function offsetExists($offset)
+	/**
+	 * @param mixed $name
+	 * @return bool|mixed
+	 * @throws InteropContainerException
+	 */
+	public function offsetExists($name)
 	{
-		return $this->hasItem($offset);
+		try{
+			[$container, $item_name] = $this->getTargetContainerAndItemName($name);
+		}catch (InteropNotFoundException $e){
+			return false;
+		}
+		if (!$container instanceof ContainerInterface) {
+			return false;
+		}
+		return $container->has($item_name);
 	}
 
-	public function offsetGet($offset)
+	/**
+	 * @param mixed $name
+	 * @return mixed
+	 * @throws InteropContainerException
+	 * @throws InteropNotFoundException
+	 */
+	public function offsetGet($name)
 	{
-		return $this->getItem($offset);
+		try{
+			[$container, $item_name] = $this->getTargetContainerAndItemName($name);
+			if (!$container instanceof ContainerInterface) {
+				$type = \gettype($container);
+				$relative_name = \substr($name, 0, -\strlen($item_name));
+				throw new ContainerException("'$relative_name' expected to be a ContainerInterface, got '$type'");
+			}
+			return $container->get($item_name);
+		}catch (InteropNotFoundException $e){
+			throw new NotFoundException("'$name' not found", 0, $e);
+		}
 	}
 
 	public function offsetSet($offset, $value)
@@ -41,6 +72,26 @@ abstract class BaseContainer implements Container, \ArrayAccess, ContainerInterf
 	public function __invoke($id)
 	{
 		return $this->getItem($id);
+	}
+
+	/**
+	 * @param string $name
+	 * @return array
+	 * @throws InteropContainerException
+	 * @throws InteropNotFoundException
+	 */
+	private function getTargetContainerAndItemName(string $name) : array
+	{
+		$path_arr = \explode('/', $name);
+		$item_index = \count($path_arr) - 1;
+		$item_name = $path_arr[$item_index];
+		$container = $this;
+		for ($i = 0; $i < $item_index; $i++) {
+			$container_name = $path_arr[$i];
+			/** @var $container ContainerInterface */
+			$container = $container->get($container_name);
+		}
+		return [$container, $item_name];
 	}
 
 }

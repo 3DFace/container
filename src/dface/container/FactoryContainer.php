@@ -4,12 +4,12 @@ namespace dface\container;
 
 use Interop\Container\ContainerInterface;
 
-class FactoryContainer extends BaseContainer
+class FactoryContainer implements ContainerInterface
 {
 
 	/** @var ContainerInterface */
-	protected $lookupContainer;
-	protected $definitions = [];
+	private $lookupContainer;
+	private $definitions;
 
 	public function __construct(array $definitions = [], ContainerInterface $lookupContainer = null)
 	{
@@ -17,9 +17,9 @@ class FactoryContainer extends BaseContainer
 		$this->lookupContainer = $lookupContainer ?: $this;
 	}
 
-	public function hasItem($name) : bool
+	public function has($name) : bool
 	{
-		return array_key_exists($name, $this->definitions);
+		return \array_key_exists($name, $this->definitions);
 	}
 
 	/**
@@ -28,9 +28,9 @@ class FactoryContainer extends BaseContainer
 	 * @throws ContainerException
 	 * @throws NotFoundException
 	 */
-	public function getItem($name)
+	public function get($name)
 	{
-		if (array_key_exists($name, $this->definitions)) {
+		if (\array_key_exists($name, $this->definitions)) {
 			return $this->initItem($name, $this->definitions[$name]);
 		}
 		throw new NotFoundException("Item '$name' not found");
@@ -42,9 +42,9 @@ class FactoryContainer extends BaseContainer
 	 * @return mixed
 	 * @throws ContainerException
 	 */
-	protected function initItem($name, $definition)
+	private function initItem($name, $definition)
 	{
-		$this->definitions[$name] = function () use ($name) {
+		$this->definitions[$name] = static function () use ($name) {
 			throw new ContainerException("Cyclic dependency, item '$name' already in construction phase");
 		};
 		$item = $this->constructItem($name, $definition);
@@ -58,7 +58,7 @@ class FactoryContainer extends BaseContainer
 	 * @return mixed
 	 * @throws ContainerException
 	 */
-	protected function constructItem($name, $definition)
+	private function constructItem($name, $definition)
 	{
 		try{
 			if (\is_callable($definition)) {

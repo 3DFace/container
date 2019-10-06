@@ -7,7 +7,7 @@ use Interop\Container\ContainerInterface;
 class AContainer extends BaseContainer
 {
 
-	/** @var Container */
+	/** @var ContainerInterface */
 	private $container;
 	/** @var bool[] */
 	private $has_cache = [];
@@ -18,20 +18,17 @@ class AContainer extends BaseContainer
 	{
 		$lookup = $parent ? new ContainerLink($this, $parent) : $this;
 		$factories = new FactoryContainer($definitions, $lookup);
-		$singletons = new SingletonContainer($factories);
-		$this->container = new PathContainer($singletons);
+		$this->container = new SingletonContainer($factories);
 	}
 
 	/**
 	 * @param string $name
 	 * @return bool
-	 * @throws \Interop\Container\Exception\ContainerException
-	 * @throws \Interop\Container\Exception\NotFoundException
 	 */
 	public function hasItem($name) : bool
 	{
 		if (!isset($this->has_cache[$name])) {
-			$this->has_cache[$name] = $this->container->hasItem($name);
+			$this->has_cache[$name] = $this->container->has($name);
 		}
 		return $this->has_cache[$name];
 	}
@@ -39,14 +36,13 @@ class AContainer extends BaseContainer
 	/**
 	 * @param $name
 	 * @return mixed
-	 * @throws ContainerException
 	 * @throws \Interop\Container\Exception\ContainerException
 	 * @throws \Interop\Container\Exception\NotFoundException
 	 */
 	public function getItem($name)
 	{
 		if (!isset($this->get_cache[$name])) {
-			$this->get_cache[$name] = $this->container->getItem($name);
+			$this->get_cache[$name] = $this->container->get($name);
 		}
 		return $this->get_cache[$name];
 	}
