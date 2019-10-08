@@ -1,48 +1,26 @@
 <?php
-/* author: Ponomarev Denis <ponomarev@gmail.com> */
 
 namespace dface\container;
 
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-abstract class HandyContainer implements \ArrayAccess, ContainerInterface
+class PathResolver implements ContainerInterface
 {
 
-	/**
-	 * @param mixed $name
-	 * @return bool|mixed
-	 */
-	public function offsetExists($name)
-	{
-		return $this->has($name);
-	}
+	/** @var ContainerInterface */
+	private $container;
 
 	/**
-	 * @param mixed $name
-	 * @return mixed
+	 * @param ContainerInterface $container
 	 */
-	public function offsetGet($name)
+	public function __construct(ContainerInterface $container)
 	{
-		return $this->get($name);
-	}
-
-	public function offsetSet($offset, $value) : void
-	{
-		throw new \RuntimeException('Unsupported container access');
-	}
-
-	public function offsetUnset($offset) : void
-	{
-		throw new \RuntimeException('Unsupported container access');
+		$this->container = $container;
 	}
 
 	public function get($name)
 	{
-		$path_arr = \explode('/', $name);
-		if(\count($path_arr) === 1){
-			return $this->getItem($name);
-		}
 		try{
 			[$container, $item_name] = $this->getDeepestContainerAndItemName($name);
 			if (!$container instanceof ContainerInterface) {
@@ -58,10 +36,6 @@ abstract class HandyContainer implements \ArrayAccess, ContainerInterface
 
 	public function has($name) : bool
 	{
-		$path_arr = \explode('/', $name);
-		if(\count($path_arr) === 1){
-			return $this->hasItem($name);
-		}
 		try{
 			[$container, $item_name] = $this->getDeepestContainerAndItemName($name);
 		}catch (NotFoundExceptionInterface $e){
@@ -73,11 +47,6 @@ abstract class HandyContainer implements \ArrayAccess, ContainerInterface
 		return $container->has($item_name);
 	}
 
-	public function __invoke($id)
-	{
-		return $this->getItem($id);
-	}
-
 	/**
 	 * @param string $name
 	 * @return array
@@ -87,7 +56,7 @@ abstract class HandyContainer implements \ArrayAccess, ContainerInterface
 		$path_arr = \explode('/', $name);
 		$item_index = \count($path_arr) - 1;
 		$item_name = $path_arr[$item_index];
-		$container = $this;
+		$container = $this->container;
 		for ($i = 0; $i < $item_index; $i++) {
 			$container_name = $path_arr[$i];
 			/** @var $container ContainerInterface */
@@ -95,9 +64,4 @@ abstract class HandyContainer implements \ArrayAccess, ContainerInterface
 		}
 		return [$container, $item_name];
 	}
-
-	abstract protected function getItem($name);
-
-	abstract protected function hasItem($name) : bool;
-
 }

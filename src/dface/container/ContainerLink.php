@@ -5,7 +5,7 @@ namespace dface\container;
 
 use Psr\Container\ContainerInterface;
 
-class ContainerLink extends HandyContainer
+class ContainerLink extends BaseContainer
 {
 
 	/** @var ContainerInterface */
@@ -19,7 +19,7 @@ class ContainerLink extends HandyContainer
 		$this->secondary = $secondary;
 	}
 
-	public function hasItem($name) : bool
+	public function has($name) : bool
 	{
 		return $this->primary->has($name) || $this->secondary->has($name);
 	}
@@ -28,7 +28,7 @@ class ContainerLink extends HandyContainer
 	 * @param $name
 	 * @return mixed
 	 */
-	public function getItem($name)
+	public function get($name)
 	{
 		if ($this->primary->has($name)) {
 			return $this->primary->get($name);

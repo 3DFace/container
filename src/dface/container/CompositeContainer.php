@@ -5,7 +5,7 @@ namespace dface\container;
 
 use Psr\Container\ContainerInterface;
 
-class CompositeContainer extends HandyContainer
+class CompositeContainer extends BaseContainer
 {
 
 	/** @var ContainerInterface[] */
@@ -37,7 +37,7 @@ class CompositeContainer extends HandyContainer
 		}
 	}
 
-	public function hasItem($name) : bool
+	public function has($name) : bool
 	{
 		if ($owner = $this->hasLinkedItem($name)) {
 			return true;
@@ -49,7 +49,7 @@ class CompositeContainer extends HandyContainer
 	 * @param $name
 	 * @return mixed
 	 */
-	public function getItem($name)
+	public function get($name)
 	{
 		if ($owner = $this->hasLinkedItem($name)) {
 			return $owner->get($name);
