@@ -9,6 +9,8 @@ class AContainer extends BaseContainer
 
 	/** @var ContainerInterface */
 	private $container;
+	/** @var string[] */
+	private $names;
 
 	public function __construct(array $definitions = [], ContainerInterface $parent = null)
 	{
@@ -16,6 +18,7 @@ class AContainer extends BaseContainer
 		$factories = new FactoryContainer($definitions, $lookup);
 		$singleton = new SingletonContainer($factories);
 		$this->container = new PathResolver($singleton);
+		$this->names = \array_keys($definitions);
 	}
 
 	public function get($id)
@@ -26,6 +29,11 @@ class AContainer extends BaseContainer
 	public function has($id) : bool
 	{
 		return $this->container->has($id);
+	}
+
+	public function getNames() : array
+	{
+		return $this->names;
 	}
 
 }
