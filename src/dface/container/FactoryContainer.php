@@ -62,7 +62,7 @@ class FactoryContainer implements ContainerInterface
 			}
 			return $definition;
 		}catch (\Exception $e){
-			throw new ContainerException("Cant construct '$name': ".$e->getMessage(), 0, $e);
+			throw new ContainerException("Cant construct '$name': ".$e->getMessage());
 		}
 	}
 
