@@ -31,25 +31,21 @@ class FactoryContainer implements ContainerInterface
 	public function get($name)
 	{
 		if (\array_key_exists($name, $this->definitions)) {
-			return $this->initItem($name, $this->definitions[$name]);
+
+			$definition = $this->definitions[$name];
+
+			$this->definitions[$name] = static function () use ($name) {
+				throw new ContainerException("Cyclic dependency, item '$name' already in construction phase");
+			};
+
+			try{
+				$item = $this->constructItem($name, $definition);
+			}finally{
+				$this->definitions[$name] = $definition;
+			}
+			return $item;
 		}
 		throw new NotFoundException("Item '$name' not found");
-	}
-
-	/**
-	 * @param $name
-	 * @param $definition
-	 * @return mixed
-	 * @throws ContainerException
-	 */
-	private function initItem($name, $definition)
-	{
-		$this->definitions[$name] = static function () use ($name) {
-			throw new ContainerException("Cyclic dependency, item '$name' already in construction phase");
-		};
-		$item = $this->constructItem($name, $definition);
-		$this->definitions[$name] = $definition;
-		return $item;
 	}
 
 	/**
@@ -66,7 +62,7 @@ class FactoryContainer implements ContainerInterface
 			}
 			return $definition;
 		}catch (\Exception $e){
-			throw new ContainerException("Cant construct '$name': ".$e->getMessage());
+			throw new ContainerException("Cant construct '$name': ".$e->getMessage(), 0, $e);
 		}
 	}
 
