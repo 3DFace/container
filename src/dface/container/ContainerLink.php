@@ -1,5 +1,4 @@
 <?php
-/* author: Ponomarev Denis <ponomarev@gmail.com> */
 
 namespace dface\container;
 
@@ -9,30 +8,28 @@ class ContainerLink extends BaseContainer
 {
 
 	/** @var ContainerInterface */
-	private $primary;
-	/** @var ContainerInterface */
-	private $secondary;
+	private $target;
+	/** @var array */
+	private $id_mapping;
 
-	public function __construct(ContainerInterface $primary, ContainerInterface $secondary)
+	public function __construct(ContainerInterface $target, array $id_mapping)
 	{
-		$this->primary = $primary;
-		$this->secondary = $secondary;
+		$this->target = $target;
+		$this->id_mapping = $id_mapping;
 	}
 
-	public function has($name) : bool
+	public function get($id)
 	{
-		return $this->primary->has($name) || $this->secondary->has($name);
-	}
-
-	/**
-	 * @param $name
-	 * @return mixed
-	 */
-	public function get($name)
-	{
-		if ($this->primary->has($name)) {
-			return $this->primary->get($name);
+		if (!isset($this->id_mapping[$id])) {
+			throw new NotFoundException("Link '$id' not defined");
 		}
-		return $this->secondary->get($name);
+		$id = $this->id_mapping[$id];
+		return $this->target->get($id);
 	}
+
+	public function has($id) : bool
+	{
+		return isset($this->id_mapping[$id]);
+	}
+
 }
