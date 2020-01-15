@@ -48,6 +48,11 @@ class FactoryContainer implements ContainerInterface
 		throw new NotFoundException("Item '$name' not found");
 	}
 
+	public function getNames() : array
+	{
+		return \array_keys($this->definitions);
+	}
+
 	/**
 	 * @param $name
 	 * @param $definition

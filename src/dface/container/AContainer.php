@@ -9,16 +9,15 @@ class AContainer extends BaseContainer
 
 	/** @var ContainerInterface */
 	private $container;
-	/** @var string[] */
-	private $names;
+	/** @var FactoryContainer */
+	private $factories;
 
 	public function __construct(array $definitions = [], ContainerInterface $parent = null)
 	{
 		$lookup = $parent ? new ContainerJoin($this, $parent) : $this;
-		$factories = new FactoryContainer($definitions, $lookup);
-		$singleton = new SingletonContainer($factories);
-		$this->container = new PathResolver($singleton);
-		$this->names = \array_keys($definitions);
+		$resolver = new PathResolver($lookup);
+		$this->factories = new FactoryContainer($definitions, $resolver);
+		$this->container = new SingletonContainer($this->factories);
 	}
 
 	public function get($id)
@@ -33,7 +32,7 @@ class AContainer extends BaseContainer
 
 	public function getNames() : array
 	{
-		return $this->names;
+		return $this->factories->getNames();
 	}
 
 }

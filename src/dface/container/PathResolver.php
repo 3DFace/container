@@ -5,7 +5,7 @@ namespace dface\container;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-class PathResolver implements ContainerInterface
+class PathResolver implements ContainerInterface, \ArrayAccess
 {
 
 	/** @var ContainerInterface */
@@ -21,6 +21,39 @@ class PathResolver implements ContainerInterface
 
 	public function get($name)
 	{
+		return $this->container->get($name);
+
+	}
+
+	public function has($name) : bool
+	{
+		return $this->container->has($name);
+	}
+
+	/**
+	 * @param mixed $name
+	 * @return bool|mixed
+	 */
+	public function offsetExists($name)
+	{
+		try{
+			[$container, $item_name] = $this->getDeepestContainerAndItemName($name);
+		}catch (NotFoundExceptionInterface $e){
+			return false;
+		}
+		if (!$container instanceof ContainerInterface) {
+			return false;
+		}
+		return $container->has($item_name);
+	}
+
+	/**
+	 * @param mixed $name
+	 * @return mixed
+	 * @throws ContainerException
+	 */
+	public function offsetGet($name)
+	{
 		try{
 			[$container, $item_name] = $this->getDeepestContainerAndItemName($name);
 			if (!$container instanceof ContainerInterface) {
@@ -32,19 +65,6 @@ class PathResolver implements ContainerInterface
 		}catch (NotFoundExceptionInterface $e){
 			throw new NotFoundException("'$name' not found", 0, $e);
 		}
-	}
-
-	public function has($name) : bool
-	{
-		try{
-			[$container, $item_name] = $this->getDeepestContainerAndItemName($name);
-		}catch (NotFoundExceptionInterface $e){
-			return false;
-		}
-		if (!$container instanceof ContainerInterface) {
-			return false;
-		}
-		return $container->has($item_name);
 	}
 
 	/**
@@ -64,4 +84,15 @@ class PathResolver implements ContainerInterface
 		}
 		return [$container, $item_name];
 	}
+
+	public function offsetSet($offset, $value) : void
+	{
+		throw new \RuntimeException('Unsupported container access');
+	}
+
+	public function offsetUnset($offset) : void
+	{
+		throw new \RuntimeException('Unsupported container access');
+	}
+
 }
