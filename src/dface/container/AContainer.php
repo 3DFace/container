@@ -15,8 +15,7 @@ class AContainer extends BaseContainer
 	public function __construct(array $definitions = [], ContainerInterface $parent = null)
 	{
 		$lookup = $parent ? new ContainerJoin($this, $parent) : $this;
-		$resolver = new PathResolver($lookup);
-		$this->factories = new FactoryContainer($definitions, $resolver);
+		$this->factories = new FactoryContainer($definitions, $lookup);
 		$this->container = new SingletonContainer($this->factories);
 	}
 

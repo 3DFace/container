@@ -19,7 +19,7 @@ class AContainerTest extends \PHPUnit_Framework_TestCase {
 				], $c);
 			}
 		]);
-		$this->assertEquals(1, $c['b']['c']);
+		$this->assertEquals(1, $c['b/c']);
 		$this->assertEquals(1, $c('a'));
 	}
 
@@ -73,7 +73,7 @@ class AContainerTest extends \PHPUnit_Framework_TestCase {
 
 	public function testHierarchy() : void
 	{
-		$c = new PathResolver(new AContainer([
+		$c = new AContainer([
 			'a' => static function($c){
 				return new AContainer([
 					'b' => static function($c){
@@ -88,7 +88,7 @@ class AContainerTest extends \PHPUnit_Framework_TestCase {
 					},
 				], $c);
 			}
-		]));
+		]);
 		$this->assertEquals(1, $c['a/b/c']);
 	}
 
