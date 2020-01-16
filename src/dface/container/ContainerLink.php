@@ -3,7 +3,6 @@
 namespace dface\container;
 
 use Psr\Container\ContainerInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 class ContainerLink extends BaseContainer
 {
@@ -25,17 +24,7 @@ class ContainerLink extends BaseContainer
 			throw new NotFoundException("Link '$id' not defined");
 		}
 		$id = $this->id_mapping[$id];
-		try{
-			[$container, $item_name] = self::getDeepestContainerAndItemName($this->target, $id);
-			if (!$container instanceof ContainerInterface) {
-				$type = \gettype($container);
-				$relative_name = \substr($id, 0, -\strlen($item_name));
-				throw new ContainerException("'$relative_name' expected to be a ContainerInterface, got '$type'");
-			}
-			return $container->get($item_name);
-		}catch (NotFoundExceptionInterface $e){
-			throw new NotFoundException("'$id' not found", 0, $e);
-		}
+		return PathResolver::containerGetPath($this->target, $id);
 	}
 
 	public function has($id) : bool
