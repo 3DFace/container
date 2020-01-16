@@ -8,8 +8,8 @@ use Psr\Container\NotFoundExceptionInterface;
 abstract class PathResolver
 {
 
-
 	/**
+	 * @param ContainerInterface $container
 	 * @param mixed $name
 	 * @return bool|mixed
 	 */
@@ -27,9 +27,11 @@ abstract class PathResolver
 	}
 
 	/**
+	 * @param ContainerInterface $container
 	 * @param mixed $name
 	 * @return mixed
 	 * @throws ContainerException
+	 * @throws NotFoundException
 	 */
 	public static function containerGetPath(ContainerInterface $container, $name)
 	{
