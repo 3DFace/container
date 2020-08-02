@@ -8,12 +8,7 @@ use Psr\Container\NotFoundExceptionInterface;
 abstract class PathResolver
 {
 
-	/**
-	 * @param ContainerInterface $container
-	 * @param mixed $name
-	 * @return bool|mixed
-	 */
-	public static function containerHasPath(ContainerInterface $container, $name)
+	public static function containerHasPath(ContainerInterface $container, string $name) : bool
 	{
 		try{
 			[$container, $item_name] = self::getDeepestContainerAndItemName($container, $name);
@@ -33,7 +28,7 @@ abstract class PathResolver
 	 * @throws ContainerException
 	 * @throws NotFoundException
 	 */
-	public static function containerGetPath(ContainerInterface $container, $name)
+	public static function containerGetPath(ContainerInterface $container, string $name)
 	{
 		try{
 			[$container, $item_name] = self::getDeepestContainerAndItemName($container, $name);

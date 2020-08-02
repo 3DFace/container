@@ -3,9 +3,10 @@
 
 namespace dface\container;
 
+use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 
-class SingletonContainerTest extends \PHPUnit_Framework_TestCase
+class SingletonContainerTest extends TestCase
 {
 
 	public function testSingleInstance() : void
@@ -17,8 +18,8 @@ class SingletonContainerTest extends \PHPUnit_Framework_TestCase
 			},
 		]);
 		$c = new SingletonContainer($f);
-		$this->assertEquals(0, $c->get('a'));
-		$this->assertEquals(0, $c->get('a'));
+		self::assertEquals(0, $c->get('a'));
+		self::assertEquals(0, $c->get('a'));
 	}
 
 	public function testHasItem() : void
@@ -29,8 +30,8 @@ class SingletonContainerTest extends \PHPUnit_Framework_TestCase
 			},
 		]);
 		$c = new SingletonContainer($f);
-		$this->assertTrue($c->has('a'));
-		$this->assertFalse($c->has('b'));
+		self::assertTrue($c->has('a'));
+		self::assertFalse($c->has('b'));
 	}
 
 	public function testGetItem() : void
@@ -41,8 +42,8 @@ class SingletonContainerTest extends \PHPUnit_Framework_TestCase
 			},
 		]);
 		$c = new SingletonContainer($f);
-		$this->assertEquals(1, $c->get('a'));
-		$this->setExpectedException(NotFoundException::class);
+		self::assertEquals(1, $c->get('a'));
+		$this->expectException(NotFoundException::class);
 		$c->get('b');
 	}
 
@@ -54,7 +55,7 @@ class SingletonContainerTest extends \PHPUnit_Framework_TestCase
 			},
 		]);
 		$c = new SingletonContainer($f);
-		$this->setExpectedException(ContainerException::class);
+		$this->expectException(ContainerException::class);
 		$c->get('a');
 	}
 
@@ -70,8 +71,8 @@ class SingletonContainerTest extends \PHPUnit_Framework_TestCase
 			},
 		]);
 		$c = new SingletonContainer($f);
-		$this->assertEquals(1, $c->get('a'));
-		$this->assertEquals(1, $c->get('a'));
+		self::assertEquals(1, $c->get('a'));
+		self::assertEquals(1, $c->get('a'));
 	}
 
 	public function testExternalLookup() : void
@@ -89,8 +90,8 @@ class SingletonContainerTest extends \PHPUnit_Framework_TestCase
 			},
 		], $c1);
 		$c2 = new SingletonContainer($f2);
-		$this->assertEquals(1, $c2->get('a'));
-		$this->assertEquals(1, $c2->get('a'));
+		self::assertEquals(1, $c2->get('a'));
+		self::assertEquals(1, $c2->get('a'));
 	}
 
 }

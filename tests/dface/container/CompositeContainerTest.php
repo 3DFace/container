@@ -3,7 +3,9 @@
 
 namespace dface\container;
 
-class CompositeContainerTest  extends \PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\TestCase;
+
+class CompositeContainerTest  extends TestCase {
 
 	public function testA() : void
 	{
@@ -42,17 +44,17 @@ class CompositeContainerTest  extends \PHPUnit_Framework_TestCase {
 
 		$comp = new CompositeContainer([$c1, $c2, $c3], $p);
 
-		$this->assertTrue($comp->has('x'));
-		$this->assertTrue($comp->has('a'));
-		$this->assertTrue($comp->has('b'));
-		$this->assertTrue($comp->has('c'));
-		$this->assertTrue($comp->has('d'));
-		$this->assertFalse($comp->has('e'));
-		$this->assertEquals(0, $comp->get('x'));
-		$this->assertEquals(1, $comp->get('a'));
-		$this->assertEquals(1, $comp->get('b'));
-		$this->assertEquals(2, $comp->get('c'));
-		$this->assertEquals(3, $comp->get('d'));
+		self::assertTrue($comp->has('x'));
+		self::assertTrue($comp->has('a'));
+		self::assertTrue($comp->has('b'));
+		self::assertTrue($comp->has('c'));
+		self::assertTrue($comp->has('d'));
+		self::assertFalse($comp->has('e'));
+		self::assertEquals(0, $comp->get('x'));
+		self::assertEquals(1, $comp->get('a'));
+		self::assertEquals(1, $comp->get('b'));
+		self::assertEquals(2, $comp->get('c'));
+		self::assertEquals(3, $comp->get('d'));
 	}
 
 }

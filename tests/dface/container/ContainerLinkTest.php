@@ -2,7 +2,9 @@
 
 namespace dface\container;
 
-class ContainerLinkTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class ContainerLinkTest extends TestCase
 {
 	public function testValidLink() : void
 	{
@@ -18,8 +20,8 @@ class ContainerLinkTest extends \PHPUnit_Framework_TestCase
 			'q' => 'a',
 			'b' => 'b',
 		]);
-		$this->assertEquals(1, $link['q']);
-		$this->assertEquals(2, $link['b']);
+		self::assertEquals(1, $link['q']);
+		self::assertEquals(2, $link['b']);
 	}
 
 	public function testInvalidLink1() : void
@@ -28,7 +30,7 @@ class ContainerLinkTest extends \PHPUnit_Framework_TestCase
 		$link = new ContainerLink($c, [
 			'b' => 'b',
 		]);
-		$this->setExpectedException(NotFoundException::class);
+		$this->expectException(NotFoundException::class);
 		$link->get('b');
 	}
 
@@ -36,7 +38,7 @@ class ContainerLinkTest extends \PHPUnit_Framework_TestCase
 	{
 		$c = new AContainer([]);
 		$link = new ContainerLink($c, []);
-		$this->setExpectedException(NotFoundException::class);
+		$this->expectException(NotFoundException::class);
 		$link->get('b');
 	}
 }

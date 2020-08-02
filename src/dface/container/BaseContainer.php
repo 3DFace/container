@@ -54,12 +54,12 @@ abstract class BaseContainer implements \ArrayAccess, ContainerInterface
 	 */
 	public function getItem($name)
 	{
-		return $this->offsetGet($name); // legacy
+		return $this->offsetGet($name);
 	}
 
 	public function hasItem($name) : bool
 	{
-		return $this->offsetExists($name); // legacy
+		return $this->offsetExists($name);
 	}
 
 }

@@ -9,9 +9,8 @@ class CompositeContainer extends BaseContainer
 {
 
 	/** @var ContainerInterface[] */
-	private $links = [];
-	/** @var ContainerInterface */
-	private $parent;
+	private array $links = [];
+	private ?ContainerInterface $parent;
 
 	public function __construct(array $links = [], ContainerInterface $parent = null)
 	{
@@ -19,10 +18,7 @@ class CompositeContainer extends BaseContainer
 		$this->parent = $parent;
 	}
 
-	/**
-	 * @param ContainerInterface $container
-	 */
-	public function addContainer($container) : void
+	public function addContainer(ContainerInterface $container) : void
 	{
 		$this->links[] = $container;
 	}
@@ -30,7 +26,7 @@ class CompositeContainer extends BaseContainer
 	/**
 	 * @param ContainerInterface[] $containers
 	 */
-	public function addContainers($containers) : void
+	public function addContainers(array $containers) : void
 	{
 		foreach ($containers as $container) {
 			$this->addContainer($container);

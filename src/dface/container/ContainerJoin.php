@@ -8,10 +8,8 @@ use Psr\Container\ContainerInterface;
 class ContainerJoin extends BaseContainer
 {
 
-	/** @var ContainerInterface */
-	private $primary;
-	/** @var ContainerInterface */
-	private $secondary;
+	private ContainerInterface $primary;
+	private ContainerInterface $secondary;
 
 	public function __construct(ContainerInterface $primary, ContainerInterface $secondary)
 	{
@@ -24,10 +22,6 @@ class ContainerJoin extends BaseContainer
 		return $this->primary->has($name) || $this->secondary->has($name);
 	}
 
-	/**
-	 * @param $name
-	 * @return mixed
-	 */
 	public function get($name)
 	{
 		if ($this->primary->has($name)) {

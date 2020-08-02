@@ -7,10 +7,8 @@ use Psr\Container\ContainerInterface;
 class AContainer extends BaseContainer
 {
 
-	/** @var ContainerInterface */
-	private $container;
-	/** @var FactoryContainer */
-	private $factories;
+	private ContainerInterface $container;
+	private FactoryContainer $factories;
 
 	public function __construct(array $definitions = [], ContainerInterface $parent = null)
 	{

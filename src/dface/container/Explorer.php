@@ -8,13 +8,12 @@ use Psr\Container\ContainerInterface;
 class Explorer
 {
 
-	/** @var ContainerInterface */
-	private $basePathContainer;
-	private $descriptor;
+	private ContainerInterface $container;
+	private string $descriptor;
 
-	public function __construct($basePathContainer, $descriptor)
+	public function __construct(ContainerInterface $basePathContainer, string $descriptor)
 	{
-		$this->basePathContainer = $basePathContainer;
+		$this->container = $basePathContainer;
 		$this->descriptor = $descriptor;
 	}
 
@@ -24,9 +23,9 @@ class Explorer
 	 */
 	public function getNames($containerName = null) : array
 	{
-		$c = $containerName ? $this->basePathContainer->get($containerName) : $this->basePathContainer;
+		$c = $containerName ? $this->container->get($containerName) : $this->container;
 		$d = $this->getDescriptions($c);
-		return array_keys($d);
+		return \array_keys($d);
 	}
 
 	/**
@@ -35,7 +34,7 @@ class Explorer
 	 */
 	public function getServicesInfo($containerName = null) : array
 	{
-		$c = $containerName ? $this->basePathContainer->get($containerName) : $this->basePathContainer;
+		$c = $containerName ? $this->container->get($containerName) : $this->container;
 		$d = $this->getDescriptions($c);
 		$result = [];
 		foreach ($d as $shortName => [$class, $desc]) {
@@ -51,7 +50,7 @@ class Explorer
 	 */
 	public function getServiceDescription($containerName, $serviceShortName)
 	{
-		$c = $containerName ? $this->basePathContainer->get($containerName) : $this->basePathContainer;
+		$c = $containerName ? $this->container->get($containerName) : $this->container;
 		$d = $this->getDescriptions($c);
 		if (isset($d[$serviceShortName])) {
 			return $d[$serviceShortName];
@@ -62,11 +61,11 @@ class Explorer
 	/**
 	 * @param $containerName
 	 * @param $serviceShortName
-	 * @return array|null
+	 * @return array
 	 */
-	public function getServiceDetails($containerName, $serviceShortName) : ?array
+	public function getServiceDetails($containerName, $serviceShortName) : array
 	{
-		$c = $containerName ? $this->basePathContainer->get($containerName) : $this->basePathContainer;
+		$c = $containerName ? $this->container->get($containerName) : $this->container;
 		$d = $this->getDescriptions($c);
 		if (isset($d[$serviceShortName])) {
 			[$class, $desc] = $d[$serviceShortName];
@@ -75,11 +74,7 @@ class Explorer
 		throw new \InvalidArgumentException("Service $serviceShortName not described");
 	}
 
-	/**
-	 * @param ContainerInterface $container
-	 * @return array|mixed
-	 */
-	private function getDescriptions(ContainerInterface $container)
+	private function getDescriptions(ContainerInterface $container) : array
 	{
 		return $container->has($this->descriptor) ? $container->get($this->descriptor) : [];
 	}

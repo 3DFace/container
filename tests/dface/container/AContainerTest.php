@@ -3,7 +3,9 @@
 
 namespace dface\container;
 
-class AContainerTest extends \PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\TestCase;
+
+class AContainerTest extends TestCase {
 
 	public function testA() : void
 	{
@@ -19,8 +21,8 @@ class AContainerTest extends \PHPUnit_Framework_TestCase {
 				], $c);
 			}
 		]);
-		$this->assertEquals(1, $c['b/c']);
-		$this->assertEquals(1, $c('a'));
+		self::assertEquals(1, $c['b/c']);
+		self::assertEquals(1, $c('a'));
 	}
 
 	public function testLocalOverweight() : void
@@ -40,7 +42,7 @@ class AContainerTest extends \PHPUnit_Framework_TestCase {
 				], $c);
 			}
 		]);
-		$this->assertEquals(2, $c['b']['c']);
+		self::assertEquals(2, $c['b']['c']);
 	}
 
 	public function testPathUse() : void
@@ -68,7 +70,7 @@ class AContainerTest extends \PHPUnit_Framework_TestCase {
 				], $c);
 			}
 		]);
-		$this->assertEquals(5, $c['b']['d']);
+		self::assertEquals(5, $c['b']['d']);
 	}
 
 	public function testHierarchy() : void
@@ -89,7 +91,7 @@ class AContainerTest extends \PHPUnit_Framework_TestCase {
 				], $c);
 			}
 		]);
-		$this->assertEquals(1, $c['a/b/c']);
+		self::assertEquals(1, $c['a/b/c']);
 	}
 
 }

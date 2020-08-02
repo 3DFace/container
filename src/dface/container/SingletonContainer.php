@@ -8,14 +8,9 @@ use Psr\Container\ContainerInterface;
 class SingletonContainer implements ContainerInterface
 {
 
-	/** @var ContainerInterface */
-	private $factory;
-	private $items = [];
+	private ContainerInterface $factory;
+	private array $items = [];
 
-	/**
-	 * SingletonContainer constructor.
-	 * @param ContainerInterface $factory
-	 */
 	public function __construct(ContainerInterface $factory)
 	{
 		$this->factory = $factory;
@@ -26,10 +21,6 @@ class SingletonContainer implements ContainerInterface
 		return \array_key_exists($name, $this->items) || $this->factory->has($name);
 	}
 
-	/**
-	 * @param $name
-	 * @return mixed
-	 */
 	public function get($name)
 	{
 		if (\array_key_exists($name, $this->items)) {

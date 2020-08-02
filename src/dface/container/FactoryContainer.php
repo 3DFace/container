@@ -7,14 +7,13 @@ use Psr\Container\ContainerInterface;
 class FactoryContainer implements ContainerInterface
 {
 
-	/** @var ContainerInterface */
-	private $lookupContainer;
-	private $definitions;
+	private ContainerInterface $lookupContainer;
+	private array $definitions;
 
-	public function __construct(array $definitions = [], ContainerInterface $lookupContainer = null)
+	public function __construct(array $definitions = [], ?ContainerInterface $lookupContainer = null)
 	{
 		$this->definitions = $definitions;
-		$this->lookupContainer = $lookupContainer ?: $this;
+		$this->lookupContainer = $lookupContainer ?? $this;
 	}
 
 	public function has($name) : bool

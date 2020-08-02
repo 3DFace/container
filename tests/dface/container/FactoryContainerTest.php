@@ -3,9 +3,10 @@
 
 namespace dface\container;
 
+use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 
-class FactoryContainerTest extends \PHPUnit_Framework_TestCase
+class FactoryContainerTest extends TestCase
 {
 
 	public function testPlainValue() : void
@@ -13,7 +14,7 @@ class FactoryContainerTest extends \PHPUnit_Framework_TestCase
 		$c = new FactoryContainer([
 			'a' => 1,
 		]);
-		$this->assertEquals(1, $c->get('a'));
+		self::assertEquals(1, $c->get('a'));
 	}
 
 	public function testNewInstances() : void
@@ -24,9 +25,9 @@ class FactoryContainerTest extends \PHPUnit_Framework_TestCase
 				return $i++;
 			},
 		]);
-		$this->assertEquals(0, $c->get('a'));
-		$this->assertEquals(1, $c->get('a'));
-		$this->assertEquals(2, $c->get('a'));
+		self::assertEquals(0, $c->get('a'));
+		self::assertEquals(1, $c->get('a'));
+		self::assertEquals(2, $c->get('a'));
 	}
 
 	public function testHasItem() : void
@@ -36,8 +37,8 @@ class FactoryContainerTest extends \PHPUnit_Framework_TestCase
 				return 1;
 			},
 		]);
-		$this->assertTrue($c->has('a'));
-		$this->assertFalse($c->has('b'));
+		self::assertTrue($c->has('a'));
+		self::assertFalse($c->has('b'));
 	}
 
 	/**
@@ -51,8 +52,8 @@ class FactoryContainerTest extends \PHPUnit_Framework_TestCase
 				return 1;
 			},
 		]);
-		$this->assertEquals(1, $c->get('a'));
-		$this->setExpectedException(NotFoundException::class);
+		self::assertEquals(1, $c->get('a'));
+		$this->expectException(NotFoundException::class);
 		$c->get('b');
 	}
 
@@ -67,7 +68,7 @@ class FactoryContainerTest extends \PHPUnit_Framework_TestCase
 				return $c->get('a');
 			},
 		]);
-		$this->setExpectedException(ContainerException::class);
+		$this->expectException(ContainerException::class);
 		$c->get('a');
 	}
 
@@ -82,8 +83,8 @@ class FactoryContainerTest extends \PHPUnit_Framework_TestCase
 				return $c->get('b');
 			},
 		]);
-		$this->assertEquals(1, $c->get('a'));
-		$this->assertEquals(2, $c->get('a'));
+		self::assertEquals(1, $c->get('a'));
+		self::assertEquals(2, $c->get('a'));
 	}
 
 	public function testExternalLookup() : void
@@ -99,8 +100,8 @@ class FactoryContainerTest extends \PHPUnit_Framework_TestCase
 				return $c->get('a');
 			},
 		], $c1);
-		$this->assertEquals(1, $c2->get('a'));
-		$this->assertEquals(2, $c2->get('a'));
+		self::assertEquals(1, $c2->get('a'));
+		self::assertEquals(2, $c2->get('a'));
 	}
 
 }

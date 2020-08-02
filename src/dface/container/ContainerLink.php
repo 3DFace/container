@@ -7,10 +7,8 @@ use Psr\Container\ContainerInterface;
 class ContainerLink extends BaseContainer
 {
 
-	/** @var ContainerInterface */
-	private $target;
-	/** @var array */
-	private $id_mapping;
+	private ContainerInterface $target;
+	private array $id_mapping;
 
 	public function __construct(ContainerInterface $target, array $id_mapping)
 	{
