@@ -1,14 +1,13 @@
 <?php
-/* author: Ponomarev Denis <ponomarev@gmail.com> */
 
 namespace dface\container;
 
 use Psr\Container\ContainerInterface;
 
-class CompositeContainer extends BaseContainer
+class CompositeContainer extends BaseContainer implements DiscoverableContainer
 {
 
-	/** @var ContainerInterface[] */
+	/** @var DiscoverableContainer[] */
 	private array $links = [];
 	private ?ContainerInterface $parent;
 
@@ -33,24 +32,31 @@ class CompositeContainer extends BaseContainer
 		}
 	}
 
-	public function has($name) : bool
+	public function has($id) : bool
 	{
-		if ($owner = $this->hasLinkedItem($name)) {
+		if ($owner = $this->hasLinkedItem($id)) {
 			return true;
 		}
-		return $this->parent !== null && $this->parent->has($name);
+		return $this->parent !== null && $this->parent->has($id);
 	}
 
 	/**
-	 * @param $name
+	 * @param $id
 	 * @return mixed
 	 */
-	public function get($name)
+	public function get($id)
 	{
-		if ($owner = $this->hasLinkedItem($name)) {
-			return $owner->get($name);
+		if ($owner = $this->hasLinkedItem($id)) {
+			return $owner->get($id);
 		}
-		return $this->parent->get($name);
+		return $this->parent->get($id);
+	}
+
+	public function getNames() : iterable
+	{
+		foreach ($this->links as $link){
+			yield from $link->getNames();
+		}
 	}
 
 	/**

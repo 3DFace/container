@@ -1,5 +1,4 @@
 <?php
-/* author: Ponomarev Denis <ponomarev@gmail.com> */
 
 namespace dface\container;
 
@@ -9,22 +8,22 @@ abstract class BaseContainer implements \ArrayAccess, ContainerInterface
 {
 
 	/**
-	 * @param mixed $name
+	 * @param mixed $offset
 	 * @return bool|mixed
 	 */
-	public function offsetExists($name)
+	public function offsetExists($offset) : bool
 	{
-		return PathResolver::containerHasPath($this, $name);
+		return PathResolver::containerHasPath($this, $offset);
 	}
 
 	/**
-	 * @param mixed $name
+	 * @param mixed $offset
 	 * @return mixed
 	 * @throws ContainerException
 	 */
-	public function offsetGet($name)
+	public function offsetGet($offset)
 	{
-		return PathResolver::containerGetPath($this, $name);
+		return PathResolver::containerGetPath($this, $offset);
 	}
 
 	public function offsetSet($offset, $value) : void

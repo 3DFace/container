@@ -4,32 +4,13 @@ namespace dface\container;
 
 use Psr\Container\ContainerInterface;
 
-class AContainer extends BaseContainer
+class AContainer extends GenericContainer
 {
 
-	private ContainerInterface $container;
-	private FactoryContainer $factories;
-
-	public function __construct(array $definitions = [], ContainerInterface $parent = null)
+	public function __construct(array $definitions_arr = [], ContainerInterface $parent = null)
 	{
-		$lookup = $parent ? new ContainerJoin($this, $parent) : $this;
-		$this->factories = new FactoryContainer($definitions, $lookup);
-		$this->container = new SingletonContainer($this->factories);
-	}
-
-	public function get($id)
-	{
-		return $this->container->get($id);
-	}
-
-	public function has($id) : bool
-	{
-		return $this->container->has($id);
-	}
-
-	public function getNames() : array
-	{
-		return $this->factories->getNames();
+		$definitions = new ArrayDefinitionSource($definitions_arr);
+		parent::__construct($definitions, $parent);
 	}
 
 }

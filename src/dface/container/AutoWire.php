@@ -1,5 +1,4 @@
 <?php
-/* author: Ponomarev Denis <ponomarev@gmail.com> */
 
 namespace dface\container;
 
@@ -16,7 +15,7 @@ class AutoWire
 	 * @throws \ReflectionException
 	 * @throws ContainerException
 	 */
-	public static function construct(ContainerInterface $container, $class, array $explicit_arguments = [])
+	public static function construct(ContainerInterface $container, $class, array $explicit_arguments = []) : object
 	{
 		$reflection_class = new \ReflectionClass($class);
 		$constructor = $reflection_class->getConstructor();

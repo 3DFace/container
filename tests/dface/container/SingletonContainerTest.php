@@ -1,5 +1,4 @@
 <?php
-/* author: Ponomarev Denis <ponomarev@gmail.com> */
 
 namespace dface\container;
 
@@ -12,11 +11,11 @@ class SingletonContainerTest extends TestCase
 	public function testSingleInstance() : void
 	{
 		$i = 0;
-		$f = new FactoryContainer([
+		$f = new FactoryContainer(new ArrayDefinitionSource([
 			'a' => static function () use (&$i) {
 				return $i++;
 			},
-		]);
+		]));
 		$c = new SingletonContainer($f);
 		self::assertEquals(0, $c->get('a'));
 		self::assertEquals(0, $c->get('a'));
@@ -24,11 +23,11 @@ class SingletonContainerTest extends TestCase
 
 	public function testHasItem() : void
 	{
-		$f = new FactoryContainer([
+		$f = new FactoryContainer(new ArrayDefinitionSource([
 			'a' => static function () {
 				throw new ContainerException("Must not be called on 'hasItem'");
 			},
-		]);
+		]));
 		$c = new SingletonContainer($f);
 		self::assertTrue($c->has('a'));
 		self::assertFalse($c->has('b'));
@@ -36,11 +35,11 @@ class SingletonContainerTest extends TestCase
 
 	public function testGetItem() : void
 	{
-		$f = new FactoryContainer([
+		$f = new FactoryContainer(new ArrayDefinitionSource([
 			'a' => static function () {
 				return 1;
 			},
-		]);
+		]));
 		$c = new SingletonContainer($f);
 		self::assertEquals(1, $c->get('a'));
 		$this->expectException(NotFoundException::class);
@@ -49,11 +48,11 @@ class SingletonContainerTest extends TestCase
 
 	public function testCyclicDependency() : void
 	{
-		$f = new FactoryContainer([
+		$f = new FactoryContainer(new ArrayDefinitionSource([
 			'a' => static function (ContainerInterface $c) {
 				return $c->get('a');
 			},
-		]);
+		]));
 		$c = new SingletonContainer($f);
 		$this->expectException(ContainerException::class);
 		$c->get('a');
@@ -62,14 +61,14 @@ class SingletonContainerTest extends TestCase
 	public function testLocalLookup() : void
 	{
 		$i = 1;
-		$f = new FactoryContainer([
+		$f = new FactoryContainer(new ArrayDefinitionSource([
 			'b' => static function () use (&$i) {
 				return $i++;
 			},
 			'a' => static function (ContainerInterface $c) {
 				return $c->get('b');
 			},
-		]);
+		]));
 		$c = new SingletonContainer($f);
 		self::assertEquals(1, $c->get('a'));
 		self::assertEquals(1, $c->get('a'));
@@ -78,17 +77,17 @@ class SingletonContainerTest extends TestCase
 	public function testExternalLookup() : void
 	{
 		$i = 1;
-		$f1 = new FactoryContainer([
+		$f1 = new FactoryContainer(new ArrayDefinitionSource([
 			'a' => static function () use (&$i) {
 				return $i++;
 			},
-		]);
+		]));
 		$c1 = new SingletonContainer($f1);
-		$f2 = new FactoryContainer([
+		$f2 = new FactoryContainer(new ArrayDefinitionSource([
 			'a' => static function (ContainerInterface $c) {
 				return $c->get('a');
 			},
-		], $c1);
+		]), $c1);
 		$c2 = new SingletonContainer($f2);
 		self::assertEquals(1, $c2->get('a'));
 		self::assertEquals(1, $c2->get('a'));

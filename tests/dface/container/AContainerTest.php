@@ -1,5 +1,4 @@
 <?php
-/* author: Ponomarev Denis <ponomarev@gmail.com> */
 
 namespace dface\container;
 
@@ -23,6 +22,7 @@ class AContainerTest extends TestCase {
 		]);
 		self::assertEquals(1, $c['b/c']);
 		self::assertEquals(1, $c('a'));
+		self::assertEquals(['a', 'b'], $c->getNames());
 	}
 
 	public function testLocalOverweight() : void

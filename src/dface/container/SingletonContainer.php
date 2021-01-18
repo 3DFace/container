@@ -1,5 +1,4 @@
 <?php
-/* author: Ponomarev Denis <ponomarev@gmail.com> */
 
 namespace dface\container;
 
@@ -16,18 +15,18 @@ class SingletonContainer implements ContainerInterface
 		$this->factory = $factory;
 	}
 
-	public function has($name) : bool
+	public function has($id) : bool
 	{
-		return \array_key_exists($name, $this->items) || $this->factory->has($name);
+		return \array_key_exists($id, $this->items) || $this->factory->has($id);
 	}
 
-	public function get($name)
+	public function get($id)
 	{
-		if (\array_key_exists($name, $this->items)) {
-			return $this->items[$name];
+		if (\array_key_exists($id, $this->items)) {
+			return $this->items[$id];
 		}
-		$item = $this->factory->get($name);
-		$this->items[$name] = $item;
+		$item = $this->factory->get($id);
+		$this->items[$id] = $item;
 		return $item;
 	}
 

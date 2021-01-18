@@ -4,70 +4,50 @@ namespace dface\container;
 
 use Psr\Container\ContainerInterface;
 
-class FactoryContainer implements ContainerInterface
+class FactoryContainer implements DiscoverableContainer
 {
 
 	private ContainerInterface $lookupContainer;
-	private array $definitions;
+	private DefinitionSource $definitions;
+	private array $construction_track = [];
 
-	public function __construct(array $definitions = [], ?ContainerInterface $lookupContainer = null)
+	public function __construct(DefinitionSource $definitions, ?ContainerInterface $lookupContainer = null)
 	{
 		$this->definitions = $definitions;
 		$this->lookupContainer = $lookupContainer ?? $this;
 	}
 
-	public function has($name) : bool
+	public function has($id) : bool
 	{
-		return \array_key_exists($name, $this->definitions);
+		return $this->definitions->hasDefinition($id);
 	}
 
 	/**
-	 * @param $name
+	 * @param $id
 	 * @return mixed
 	 * @throws ContainerException
 	 * @throws NotFoundException
 	 */
-	public function get($name)
+	public function get($id)
 	{
-		if (\array_key_exists($name, $this->definitions)) {
-
-			$definition = $this->definitions[$name];
-
-			$this->definitions[$name] = static function () use ($name) {
-				throw new ContainerException("Cyclic dependency, item '$name' already in construction phase");
-			};
-
-			try{
-				$item = $this->constructItem($name, $definition);
-			}finally{
-				$this->definitions[$name] = $definition;
-			}
-			return $item;
+		if (isset($this->construction_track[$id])) {
+			throw new ContainerException("Cyclic dependency, item '$id' already in construction phase");
 		}
-		throw new NotFoundException("Item '$name' not found");
+		$definition = $this->definitions->getDefinition($id);
+		$this->construction_track[$id] = true;
+		try {
+			$item = $definition($this->lookupContainer, $id);
+		} catch (\Exception $e) {
+			throw new ContainerException("Cant construct '$id': ".$e->getMessage());
+		} finally {
+			unset($this->construction_track[$id]);
+		}
+		return $item;
 	}
 
-	public function getNames() : array
+	public function getNames() : iterable
 	{
-		return \array_keys($this->definitions);
-	}
-
-	/**
-	 * @param $name
-	 * @param $definition
-	 * @return mixed
-	 * @throws ContainerException
-	 */
-	private function constructItem($name, $definition)
-	{
-		try{
-			if (\is_callable($definition)) {
-				return $definition($this->lookupContainer, $name);
-			}
-			return $definition;
-		}catch (\Exception $e){
-			throw new ContainerException("Cant construct '$name': ".$e->getMessage());
-		}
+		return $this->definitions->getNames();
 	}
 
 }

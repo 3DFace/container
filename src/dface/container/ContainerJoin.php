@@ -1,5 +1,4 @@
 <?php
-/* author: Ponomarev Denis <ponomarev@gmail.com> */
 
 namespace dface\container;
 
@@ -17,16 +16,17 @@ class ContainerJoin extends BaseContainer
 		$this->secondary = $secondary;
 	}
 
-	public function has($name) : bool
+	public function has($id) : bool
 	{
-		return $this->primary->has($name) || $this->secondary->has($name);
+		return $this->primary->has($id) || $this->secondary->has($id);
 	}
 
-	public function get($name)
+	public function get($id)
 	{
-		if ($this->primary->has($name)) {
-			return $this->primary->get($name);
+		if ($this->primary->has($id)) {
+			return $this->primary->get($id);
 		}
-		return $this->secondary->get($name);
+		return $this->secondary->get($id);
 	}
+
 }
