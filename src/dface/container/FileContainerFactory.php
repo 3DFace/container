@@ -2,14 +2,16 @@
 
 namespace dface\container;
 
+use Psr\Container\ContainerInterface;
+
 class FileContainerFactory
 {
 
-	public static function getFor(string $dir_name, $parent) : GenericContainer
+	public static function create(string $dir_name, ?ContainerInterface $parent = null) : GenericContainer
 	{
 		$loader = static function ($dir_name) {
 			return static function ($parent) use ($dir_name) {
-				return self::getFor($dir_name, $parent);
+				return self::create($dir_name, $parent);
 			};
 		};
 		$src = new FileDefinitionSource($dir_name, $loader);

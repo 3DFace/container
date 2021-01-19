@@ -12,7 +12,7 @@ class FileContainerFactoryTest extends TestCase
 	protected function setUp() : void
 	{
 		parent::setUp();
-		$this->container = FileContainerFactory::getFor(__DIR__.'/../data', null);
+		$this->container = FileContainerFactory::create(__DIR__.'/../data', null);
 	}
 
 	public function testNames() : void
