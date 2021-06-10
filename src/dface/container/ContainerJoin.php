@@ -16,6 +16,16 @@ class ContainerJoin extends BaseContainer
 		$this->secondary = $secondary;
 	}
 
+	public function getPrimary() : ContainerInterface
+	{
+		return $this->primary;
+	}
+
+	public function getSecondary() : ContainerInterface
+	{
+		return $this->secondary;
+	}
+
 	public function has($id) : bool
 	{
 		return $this->primary->has($id) || $this->secondary->has($id);
