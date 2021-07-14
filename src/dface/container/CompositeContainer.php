@@ -34,7 +34,7 @@ class CompositeContainer extends BaseContainer implements DiscoverableContainer
 
 	public function has($id) : bool
 	{
-		if ($owner = $this->hasLinkedItem($id)) {
+		if ($this->hasLinkedItem($id)) {
 			return true;
 		}
 		return $this->parent !== null && $this->parent->has($id);
