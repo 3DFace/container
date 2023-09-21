@@ -10,19 +10,24 @@
 	}
 	],
 	"require": {
-		"php": ">=7.4.0",
+		"php": ">=7.4.0|^8.1",
 		"psr/container": "^1.0"
 	},
 	"provide": {
 		"psr/container-implementation":  "1.0.0"
 	},
 	"require-dev": {
-		"phpunit/phpunit": "^9.2"
+		"phpunit/phpunit": "^10.1"
 	},
 	"autoload": {
 		"psr-0": {"dface\\container": "src/"}
 	},
 	"autoload-dev": {
 		"psr-0": {"dface\\container": "tests/"}
+	},
+	"config": {
+		"platform": {
+			"php": "8.2.5"
+		}
 	}
 }

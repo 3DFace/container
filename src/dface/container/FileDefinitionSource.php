@@ -90,7 +90,6 @@ class FileDefinitionSource implements DefinitionSource
 		$file_name = $this->dir.'/'.$name.'.php';
 		if (\is_file($file_name)) {
 			return static function() use ($file_name){
-				/** @noinspection PhpIncludeInspection */
 				return include $file_name;
 			};
 		}

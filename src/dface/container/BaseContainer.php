@@ -21,6 +21,7 @@ abstract class BaseContainer implements \ArrayAccess, ContainerInterface
 	 * @return mixed
 	 * @throws ContainerException
 	 */
+	#[\ReturnTypeWillChange]
 	public function offsetGet($offset)
 	{
 		return PathResolver::containerGetPath($this, $offset);
