@@ -1,9 +1,10 @@
 <?php
-/* author: Ponomarev Denis <ponomarev@gmail.com> */
 
 namespace dface\container;
 
-class CompositeContainerTest  extends \PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\TestCase;
+
+class CompositeContainerTest  extends TestCase {
 
 	function testA(){
 		$p = new AContainer([

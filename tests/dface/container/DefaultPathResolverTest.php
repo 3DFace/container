@@ -1,9 +1,10 @@
 <?php
-/* author: Ponomarev Denis <ponomarev@gmail.com> */
 
 namespace dface\container;
 
-class DefaultPathResolverTest extends \PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\TestCase;
+
+class DefaultPathResolverTest extends TestCase {
 
 	function testOneChar(){
 		$pr = new DefaultPathResolver('/');

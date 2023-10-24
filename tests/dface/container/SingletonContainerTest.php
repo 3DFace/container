@@ -1,9 +1,10 @@
 <?php
-/* author: Ponomarev Denis <ponomarev@gmail.com> */
 
 namespace dface\container;
 
-class SingletonContainerTest extends \PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\TestCase;
+
+class SingletonContainerTest extends TestCase {
 
 	function testSingleInstance(){
 		$i = 0;
@@ -36,7 +37,7 @@ class SingletonContainerTest extends \PHPUnit_Framework_TestCase {
 		]);
 		$c = new SingletonContainer($f);
 		$this->assertEquals(1, $c->getItem('a'));
-		$this->setExpectedException(NotFoundException::class);
+		$this->expectException(NotFoundException::class);
 		$c->getItem('b');
 	}
 
@@ -47,7 +48,7 @@ class SingletonContainerTest extends \PHPUnit_Framework_TestCase {
 			},
 		]);
 		$c = new SingletonContainer($f);
-		$this->setExpectedException(ContainerException::class);
+		$this->expectException(ContainerException::class);
 		$c->getItem('a');
 	}
 

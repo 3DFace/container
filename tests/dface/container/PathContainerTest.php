@@ -1,9 +1,10 @@
 <?php
-/* author: Ponomarev Denis <ponomarev@gmail.com> */
 
 namespace dface\container;
 
-class PathContainerTest extends \PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\TestCase;
+
+class PathContainerTest extends TestCase {
 
 	function testLevel0(){
 		$f = new FactoryContainer([

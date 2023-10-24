@@ -1,9 +1,10 @@
 <?php
-/* author: Ponomarev Denis <ponomarev@gmail.com> */
 
 namespace dface\container;
 
-class FactoryContainerTest extends \PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\TestCase;
+
+class FactoryContainerTest extends TestCase {
 
 	function testPlainValue(){
 		$c = new FactoryContainer([
@@ -41,7 +42,7 @@ class FactoryContainerTest extends \PHPUnit_Framework_TestCase {
 			},
 		]);
 		$this->assertEquals(1, $c->getItem('a'));
-		$this->setExpectedException(NotFoundException::class);
+		$this->expectException(NotFoundException::class);
 		$c->getItem('b');
 	}
 
@@ -51,7 +52,7 @@ class FactoryContainerTest extends \PHPUnit_Framework_TestCase {
 				return $c['a'];
 			},
 		]);
-		$this->setExpectedException(ContainerException::class);
+		$this->expectException(ContainerException::class);
 		$c->getItem('a');
 	}
 

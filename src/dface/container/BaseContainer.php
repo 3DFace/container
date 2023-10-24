@@ -7,18 +7,22 @@ use Interop\Container\ContainerInterface;
 
 abstract class BaseContainer implements Container, \ArrayAccess, ContainerInterface {
 
+	#[\ReturnTypeWillChange]
 	public function offsetExists($offset){
 		return $this->hasItem($offset);
 	}
 
+	#[\ReturnTypeWillChange]
 	public function offsetGet($offset){
 		return $this->getItem($offset);
 	}
 
+	#[\ReturnTypeWillChange]
 	public function offsetSet($offset, $value){
 		throw new \Exception("Unsupported container access");
 	}
 
+	#[\ReturnTypeWillChange]
 	public function offsetUnset($offset){
 		throw new \Exception("Unsupported container access");
 	}
