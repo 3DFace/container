@@ -2,6 +2,7 @@
 
 namespace dface\container;
 
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 
 class Explorer
@@ -17,10 +18,11 @@ class Explorer
 	}
 
 	/**
-	 * @param null $containerName
+	 * @param string|null $containerName
 	 * @return array
+	 * @throws ContainerExceptionInterface
 	 */
-	public function getNames($containerName = null) : array
+	public function getNames(?string $containerName = null) : array
 	{
 		$c = $containerName ? $this->container->get($containerName) : $this->container;
 		$d = $this->getDescriptions($c);
@@ -28,10 +30,11 @@ class Explorer
 	}
 
 	/**
-	 * @param null $containerName
+	 * @param string|null $containerName
 	 * @return array
+	 * @throws ContainerExceptionInterface
 	 */
-	public function getServicesInfo($containerName = null) : array
+	public function getServicesInfo(?string $containerName = null) : array
 	{
 		$c = $containerName ? $this->container->get($containerName) : $this->container;
 		$d = $this->getDescriptions($c);
@@ -43,11 +46,12 @@ class Explorer
 	}
 
 	/**
-	 * @param $containerName
-	 * @param $serviceShortName
+	 * @param string|null $containerName
+	 * @param string $serviceShortName
 	 * @return mixed
+	 * @throws ContainerExceptionInterface
 	 */
-	public function getServiceDescription($containerName, $serviceShortName)
+	public function getServiceDescription(?string $containerName, string $serviceShortName) : mixed
 	{
 		$c = $containerName ? $this->container->get($containerName) : $this->container;
 		$d = $this->getDescriptions($c);
@@ -58,11 +62,12 @@ class Explorer
 	}
 
 	/**
-	 * @param $containerName
-	 * @param $serviceShortName
+	 * @param string|null $containerName
+	 * @param string $serviceShortName
 	 * @return array
+	 * @throws ContainerExceptionInterface
 	 */
-	public function getServiceDetails($containerName, $serviceShortName) : array
+	public function getServiceDetails(?string $containerName, string $serviceShortName) : array
 	{
 		$c = $containerName ? $this->container->get($containerName) : $this->container;
 		$d = $this->getDescriptions($c);
@@ -73,12 +78,15 @@ class Explorer
 		throw new \InvalidArgumentException("Service $serviceShortName not described");
 	}
 
+	/**
+	 * @throws ContainerExceptionInterface
+	 */
 	private function getDescriptions(ContainerInterface $container) : array
 	{
 		return $container->has($this->descriptor) ? $container->get($this->descriptor) : [];
 	}
 
-	private static function extractServiceDetails($shortName, $class, $desc) : array
+	private static function extractServiceDetails(string $shortName, string $class, string $desc) : array
 	{
 		try{
 			$reflectionClass = new \ReflectionClass($class);

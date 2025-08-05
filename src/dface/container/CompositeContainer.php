@@ -2,6 +2,7 @@
 
 namespace dface\container;
 
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 
 class CompositeContainer extends BaseContainer implements DiscoverableContainer
@@ -32,7 +33,7 @@ class CompositeContainer extends BaseContainer implements DiscoverableContainer
 		}
 	}
 
-	public function has($id) : bool
+	public function has(string $id) : bool
 	{
 		if ($this->hasLinkedItem($id)) {
 			return true;
@@ -41,10 +42,11 @@ class CompositeContainer extends BaseContainer implements DiscoverableContainer
 	}
 
 	/**
-	 * @param $id
+	 * @param string $id
 	 * @return mixed
+	 * @throws ContainerExceptionInterface
 	 */
-	public function get($id)
+	public function get(string $id) : mixed
 	{
 		if ($owner = $this->hasLinkedItem($id)) {
 			return $owner->get($id);

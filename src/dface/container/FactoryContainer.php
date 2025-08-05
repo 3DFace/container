@@ -17,18 +17,18 @@ class FactoryContainer implements DiscoverableContainer
 		$this->lookupContainer = $lookupContainer ?? $this;
 	}
 
-	public function has($id) : bool
+	public function has(string $id) : bool
 	{
 		return $this->definitions->hasDefinition($id);
 	}
 
 	/**
-	 * @param $id
+	 * @param string $id
 	 * @return mixed
 	 * @throws ContainerException
 	 * @throws NotFoundException
 	 */
-	public function get($id)
+	public function get(string $id) : mixed
 	{
 		if (isset($this->construction_track[$id])) {
 			throw new ContainerException("Cyclic dependency, item '$id' already in construction phase");

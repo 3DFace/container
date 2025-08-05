@@ -16,7 +16,7 @@ class ContainerLink extends BaseContainer
 		$this->id_mapping = $id_mapping;
 	}
 
-	public function get($id)
+	public function get(string $id) : mixed
 	{
 		if (!isset($this->id_mapping[$id])) {
 			throw new NotFoundException("Link '$id' not defined");
@@ -25,7 +25,7 @@ class ContainerLink extends BaseContainer
 		return PathResolver::containerGetPath($this->target, $id);
 	}
 
-	public function has($id) : bool
+	public function has(string $id) : bool
 	{
 		return isset($this->id_mapping[$id]);
 	}

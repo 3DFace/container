@@ -17,12 +17,12 @@ class GenericContainer extends BaseContainer implements DiscoverableContainer
 		$this->container = new SingletonContainer($this->factories);
 	}
 
-	public function get($id)
+	public function get(string $id) : mixed
 	{
 		return $this->container->get($id);
 	}
 
-	public function has($id) : bool
+	public function has(string $id) : bool
 	{
 		return $this->container->has($id);
 	}

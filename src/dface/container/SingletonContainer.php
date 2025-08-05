@@ -15,12 +15,12 @@ class SingletonContainer implements ContainerInterface
 		$this->factory = $factory;
 	}
 
-	public function has($id) : bool
+	public function has(string $id) : bool
 	{
 		return \array_key_exists($id, $this->items) || $this->factory->has($id);
 	}
 
-	public function get($id)
+	public function get(string $id) : mixed
 	{
 		if (\array_key_exists($id, $this->items)) {
 			return $this->items[$id];

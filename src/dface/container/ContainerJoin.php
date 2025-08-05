@@ -26,12 +26,12 @@ class ContainerJoin extends BaseContainer
 		return $this->secondary;
 	}
 
-	public function has($id) : bool
+	public function has(string $id) : bool
 	{
 		return $this->primary->has($id) || $this->secondary->has($id);
 	}
 
-	public function get($id)
+	public function get(string $id) : mixed
 	{
 		if ($this->primary->has($id)) {
 			return $this->primary->get($id);

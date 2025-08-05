@@ -2,17 +2,21 @@
 
 namespace dface\container;
 
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
 abstract class PathResolver
 {
 
+	/**
+	 * @throws ContainerExceptionInterface
+	 */
 	public static function containerHasPath(ContainerInterface $container, string $name) : bool
 	{
 		try{
 			[$container, $item_name] = self::getDeepestContainerAndItemName($container, $name);
-		}catch (NotFoundExceptionInterface $e){
+		}catch (NotFoundExceptionInterface){
 			return false;
 		}
 		if (!$container instanceof ContainerInterface) {
@@ -25,10 +29,9 @@ abstract class PathResolver
 	 * @param ContainerInterface $container
 	 * @param mixed $name
 	 * @return mixed
-	 * @throws ContainerException
-	 * @throws NotFoundException
+	 * @throws ContainerExceptionInterface
 	 */
-	public static function containerGetPath(ContainerInterface $container, string $name)
+	public static function containerGetPath(ContainerInterface $container, string $name) : mixed
 	{
 		try{
 			[$container, $item_name] = self::getDeepestContainerAndItemName($container, $name);
@@ -43,6 +46,10 @@ abstract class PathResolver
 		}
 	}
 
+	/**
+	 * @throws ContainerExceptionInterface
+	 * @throws NotFoundExceptionInterface
+	 */
 	public static function getDeepestContainerAndItemName(ContainerInterface $container, string $name) : array
 	{
 		$path_arr = \explode('/', $name);

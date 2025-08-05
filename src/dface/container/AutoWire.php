@@ -2,6 +2,7 @@
 
 namespace dface\container;
 
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 
 class AutoWire
@@ -13,7 +14,7 @@ class AutoWire
 	 * @param array $explicit_arguments
 	 * @return object
 	 * @throws \ReflectionException
-	 * @throws ContainerException
+	 * @throws ContainerExceptionInterface
 	 */
 	public static function construct(ContainerInterface $container, $class, array $explicit_arguments = []) : object
 	{
@@ -25,9 +26,10 @@ class AutoWire
 		$args = [];
 		foreach ($constructor->getParameters() as $i => $parameter) {
 			$parameter_name = $parameter->getName();
-			$parameter_class = $parameter->getClass();
-			if ($parameter_class) {
-				$parameter_class_name = $parameter_class->getShortName();
+			$parameter_class = $parameter->getType();
+			if ($parameter_class && !$parameter_class->isBuiltin()) {
+				$param_class_segments = \explode('\\', $parameter_class->getName());
+				$parameter_class_name = \array_pop($param_class_segments);
 				$parameter_class_name = \strtolower($parameter_class_name[0]).\substr($parameter_class_name, 1);
 			}else {
 				$parameter_class_name = null;
@@ -49,10 +51,13 @@ class AutoWire
 		return $reflection_class->newInstanceArgs($args);
 	}
 
+	/**
+	 * @throws ContainerExceptionInterface
+	 */
 	public static function setProperties(ContainerInterface $container, $object, array $exclude = [])
 	{
 		foreach (\get_class_methods($object) as $name) {
-			if (\strlen($name) > 3 && \strpos($name, 'set') === 0) {
+			if (\strlen($name) > 3 && \str_starts_with($name, 'set')) {
 				$property = \strtolower($name[3]).\substr($name, 4);
 				if (!\in_array($property, $exclude, true) && $container->has($property)) {
 					$item = $container->get($property);

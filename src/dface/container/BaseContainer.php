@@ -2,6 +2,7 @@
 
 namespace dface\container;
 
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 
 abstract class BaseContainer implements \ArrayAccess, ContainerInterface
@@ -9,55 +10,60 @@ abstract class BaseContainer implements \ArrayAccess, ContainerInterface
 
 	/**
 	 * @param mixed $offset
-	 * @return bool|mixed
+	 * @return bool
+	 * @throws ContainerExceptionInterface
 	 */
-	public function offsetExists($offset) : bool
+	public function offsetExists(mixed $offset) : bool
 	{
-		return PathResolver::containerHasPath($this, $offset);
+		return PathResolver::containerHasPath($this, (string)$offset);
 	}
 
 	/**
 	 * @param mixed $offset
 	 * @return mixed
-	 * @throws ContainerException
+	 * @throws ContainerExceptionInterface
 	 */
-	#[\ReturnTypeWillChange]
-	public function offsetGet($offset)
+	public function offsetGet(mixed $offset) : mixed
 	{
-		return PathResolver::containerGetPath($this, $offset);
-	}
-
-	public function offsetSet($offset, $value) : void
-	{
-		throw new \RuntimeException('Unsupported container access');
-	}
-
-	public function offsetUnset($offset) : void
-	{
-		throw new \RuntimeException('Unsupported container access');
+		return PathResolver::containerGetPath($this, (string)$offset);
 	}
 
 	/**
-	 * @param $id
-	 * @return mixed
-	 * @throws ContainerException
+	 * @throws ContainerExceptionInterface
 	 */
-	public function __invoke($id)
+	public function offsetSet(mixed $offset, $value) : void
+	{
+		throw new ContainerException('Unsupported container access');
+	}
+
+	/**
+	 * @throws ContainerExceptionInterface
+	 */
+	public function offsetUnset(mixed $offset) : void
+	{
+		throw new ContainerException('Unsupported container access');
+	}
+
+	/**
+	 * @throws ContainerExceptionInterface
+	 */
+	public function __invoke(string $id) : mixed
 	{
 		return $this->offsetGet($id);
 	}
 
 	/**
-	 * @param $name
-	 * @return mixed
-	 * @throws ContainerException
+	 * @throws ContainerExceptionInterface
 	 */
-	public function getItem($name)
+	public function getItem(string $name) : mixed
 	{
 		return $this->offsetGet($name);
 	}
 
-	public function hasItem($name) : bool
+	/**
+	 * @throws ContainerExceptionInterface
+	 */
+	public function hasItem(string $name) : bool
 	{
 		return $this->offsetExists($name);
 	}

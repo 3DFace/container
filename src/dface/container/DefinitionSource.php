@@ -15,7 +15,7 @@ interface DefinitionSource
 	public function getDefinition(string $name) : callable;
 
 	/**
-	 * @return iterable|string[]
+	 * @return iterable
 	 */
 	public function getNames() : iterable;
 
