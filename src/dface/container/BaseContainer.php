@@ -5,7 +5,7 @@ namespace dface\container;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 
-abstract class BaseContainer implements \ArrayAccess, ContainerInterface
+abstract class BaseContainer implements \ArrayAccess, ContainerInterface, Container
 {
 
 	/**
