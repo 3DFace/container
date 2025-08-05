@@ -53,6 +53,8 @@ abstract class BaseContainer implements \ArrayAccess, ContainerInterface, Contai
 	}
 
 	/**
+	 * Use `get`
+	 * @deprecated
 	 * @throws ContainerExceptionInterface
 	 */
 	public function getItem(string $name) : mixed
@@ -61,6 +63,8 @@ abstract class BaseContainer implements \ArrayAccess, ContainerInterface, Contai
 	}
 
 	/**
+	 * Use 'has'
+	 * @deprecated
 	 * @throws ContainerExceptionInterface
 	 */
 	public function hasItem(string $name) : bool
