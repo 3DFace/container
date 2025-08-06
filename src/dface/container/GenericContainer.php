@@ -2,6 +2,7 @@
 
 namespace dface\container;
 
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 
 class GenericContainer extends BaseContainer implements DiscoverableContainer
@@ -19,12 +20,15 @@ class GenericContainer extends BaseContainer implements DiscoverableContainer
 
 	public function get(string $id) : mixed
 	{
-		return $this->container->get($id);
+		return PathResolver::containerGetPath($this->container, $id);
 	}
 
+	/**
+	 * @throws ContainerExceptionInterface
+	 */
 	public function has(string $id) : bool
 	{
-		return $this->container->has($id);
+		return PathResolver::containerHasPath($this->container, $id);
 	}
 
 	public function getNames() : iterable

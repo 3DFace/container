@@ -21,6 +21,13 @@ class CompositeContainerTest  extends TestCase {
 			'b' => static function(){
 				return 1;
 			},
+			'inner' => static function(){
+				return new AContainer([
+					'a' => static function(){
+						return 0;
+					}
+				]);
+			}
 		]);
 
 		$c2 = new AContainer([
@@ -49,11 +56,14 @@ class CompositeContainerTest  extends TestCase {
 		self::assertTrue($comp->has('c'));
 		self::assertTrue($comp->has('d'));
 		self::assertFalse($comp->has('e'));
+		self::assertTrue($comp->has('inner'));
+		self::assertTrue($comp->has('inner/a'));
 		self::assertEquals(0, $comp->get('x'));
 		self::assertEquals(1, $comp->get('a'));
 		self::assertEquals(1, $comp->get('b'));
 		self::assertEquals(2, $comp->get('c'));
 		self::assertEquals(3, $comp->get('d'));
+		self::assertEquals(0, $comp->get('inner/a'));
 	}
 
 }

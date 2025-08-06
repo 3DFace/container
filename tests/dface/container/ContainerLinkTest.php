@@ -20,8 +20,8 @@ class ContainerLinkTest extends TestCase
 			'q' => 'a',
 			'b' => 'b',
 		]);
-		self::assertEquals(1, $link['q']);
-		self::assertEquals(2, $link['b']);
+		self::assertEquals(1, $link->get('q'));
+		self::assertEquals(2, $link->get('b'));
 	}
 
 	public function testInvalidLink1() : void

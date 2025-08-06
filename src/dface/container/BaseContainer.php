@@ -11,11 +11,10 @@ abstract class BaseContainer implements \ArrayAccess, ContainerInterface, Contai
 	/**
 	 * @param mixed $offset
 	 * @return bool
-	 * @throws ContainerExceptionInterface
 	 */
 	public function offsetExists(mixed $offset) : bool
 	{
-		return PathResolver::containerHasPath($this, (string)$offset);
+		return $this->has($offset);
 	}
 
 	/**
@@ -25,7 +24,7 @@ abstract class BaseContainer implements \ArrayAccess, ContainerInterface, Contai
 	 */
 	public function offsetGet(mixed $offset) : mixed
 	{
-		return PathResolver::containerGetPath($this, (string)$offset);
+		return $this->get($offset);
 	}
 
 	/**
@@ -59,17 +58,16 @@ abstract class BaseContainer implements \ArrayAccess, ContainerInterface, Contai
 	 */
 	public function getItem(string $name) : mixed
 	{
-		return $this->offsetGet($name);
+		return $this->get($name);
 	}
 
 	/**
 	 * Use 'has'
 	 * @deprecated
-	 * @throws ContainerExceptionInterface
 	 */
 	public function hasItem(string $name) : bool
 	{
-		return $this->offsetExists($name);
+		return $this->has($name);
 	}
 
 }

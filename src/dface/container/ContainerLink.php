@@ -4,7 +4,7 @@ namespace dface\container;
 
 use Psr\Container\ContainerInterface;
 
-class ContainerLink extends BaseContainer
+class ContainerLink implements ContainerInterface
 {
 
 	private ContainerInterface $target;
@@ -22,7 +22,7 @@ class ContainerLink extends BaseContainer
 			throw new NotFoundException("Link '$id' not defined");
 		}
 		$id = $this->id_mapping[$id];
-		return PathResolver::containerGetPath($this->target, $id);
+		return $this->target->get($id);
 	}
 
 	public function has(string $id) : bool
