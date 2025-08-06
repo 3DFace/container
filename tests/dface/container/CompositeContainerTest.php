@@ -48,7 +48,7 @@ class CompositeContainerTest  extends TestCase {
 			},
 		]);
 
-		$comp = new CompositeContainer([$c1, $c2, $c3], $p);
+		$comp = new CompositeContainer([$c1, $c2, $c3, $p]);
 
 		self::assertTrue($comp->has('x'));
 		self::assertTrue($comp->has('a'));

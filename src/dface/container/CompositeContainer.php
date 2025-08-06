@@ -5,17 +5,15 @@ namespace dface\container;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 
-class CompositeContainer extends BaseContainer implements DiscoverableContainer
+class CompositeContainer implements DiscoverableContainer
 {
 
 	/** @var DiscoverableContainer[] */
 	private array $links = [];
-	private ?ContainerInterface $parent;
 
-	public function __construct(array $links = [], ContainerInterface $parent = null)
+	public function __construct(array $links = [])
 	{
 		$this->addContainers($links);
-		$this->parent = $parent;
 	}
 
 	public function addContainer(ContainerInterface $container) : void
@@ -35,10 +33,7 @@ class CompositeContainer extends BaseContainer implements DiscoverableContainer
 
 	public function has(string $id) : bool
 	{
-		if ($this->hasLinkedItem($id)) {
-			return true;
-		}
-		return $this->parent !== null && $this->parent->has($id);
+		return $this->hasLinkedItem($id) !== null;
 	}
 
 	/**
@@ -51,7 +46,7 @@ class CompositeContainer extends BaseContainer implements DiscoverableContainer
 		if ($owner = $this->hasLinkedItem($id)) {
 			return $owner->get($id);
 		}
-		return $this->parent->get($id);
+		throw new NotFoundException($id);
 	}
 
 	public function getNames() : iterable

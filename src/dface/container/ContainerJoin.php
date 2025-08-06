@@ -4,7 +4,7 @@ namespace dface\container;
 
 use Psr\Container\ContainerInterface;
 
-class ContainerJoin extends BaseContainer
+class ContainerJoin implements ContainerInterface
 {
 
 	private ContainerInterface $primary;

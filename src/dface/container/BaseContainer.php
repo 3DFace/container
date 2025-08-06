@@ -5,12 +5,30 @@ namespace dface\container;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 
-abstract class BaseContainer implements \ArrayAccess, ContainerInterface, Container
+class BaseContainer implements \ArrayAccess, ContainerInterface, Container
 {
+
+	public function __construct(private readonly ContainerInterface $container)
+	{
+	}
+
+	public function get(string $id) : mixed
+	{
+		return PathResolver::containerGetPath($this->container, $id);
+	}
+
+	/**
+	 * @throws ContainerExceptionInterface
+	 */
+	public function has(string $id) : bool
+	{
+		return PathResolver::containerHasPath($this->container, $id);
+	}
 
 	/**
 	 * @param mixed $offset
 	 * @return bool
+	 * @throws ContainerExceptionInterface
 	 */
 	public function offsetExists(mixed $offset) : bool
 	{
@@ -63,6 +81,7 @@ abstract class BaseContainer implements \ArrayAccess, ContainerInterface, Contai
 
 	/**
 	 * Use 'has'
+	 * @throws ContainerExceptionInterface
 	 * @deprecated
 	 */
 	public function hasItem(string $name) : bool
