@@ -8,13 +8,18 @@ use Psr\Container\ContainerInterface;
 class BaseContainer implements \ArrayAccess, ContainerInterface, Container
 {
 
-	public function __construct(private readonly ContainerInterface $container)
+	public function __construct(private readonly ContainerInterface $target)
 	{
+	}
+
+	public function getTarget() : ContainerInterface
+	{
+		return $this->target;
 	}
 
 	public function get(string $id) : mixed
 	{
-		return PathResolver::containerGetPath($this->container, $id);
+		return PathResolver::containerGetPath($this->target, $id);
 	}
 
 	/**
@@ -22,7 +27,7 @@ class BaseContainer implements \ArrayAccess, ContainerInterface, Container
 	 */
 	public function has(string $id) : bool
 	{
-		return PathResolver::containerHasPath($this->container, $id);
+		return PathResolver::containerHasPath($this->target, $id);
 	}
 
 	/**
